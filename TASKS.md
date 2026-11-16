@@ -1,0 +1,20 @@
+# Tasks
+
+- [x] Read full user brief and gather requirements.
+- [x] Install and read landing-page-design and modern-web-guidance.
+- [x] Verify existing Understand Anything and MGI-Mind installations.
+- [x] Write BRIEF.md: structure, copy, visual concept, architecture, assumptions.
+- [x] Add MGI-Mind stdio MCP entry to Codex configuration.
+- [ ] Verify memory tools, save project decisions locally.
+- [ ] Resolve GitHub CLI authorization; create public kitsoe-landing repository and initial commit/push.
+- [ ] Add checkpoint/resume scripts and validate recovery behavior.
+- [ ] Scaffold Astro, TypeScript, lint and meaningful checks.
+- [ ] Implement hero, theme system and interactive demonstrations.
+- [ ] Implement services, process, tagline reveal and FAQ.
+- [ ] Implement inquiry form and editable contacts.
+- [ ] Add privacy, terms, 404, favicon and SEO metadata.
+- [ ] Check all requested viewport widths, keyboard, reduced motion, both themes and form scenarios.
+- [ ] Run build, types, lint, accessibility and performance checks; fix defects.
+- [ ] Analyze architecture with Understand Anything (agent tooling only).
+- [ ] Scan Git contents for secrets and push final commits.
+- [ ] Leave local site running and document launch, stop and recovery commands.
