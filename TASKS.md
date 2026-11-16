@@ -5,14 +5,14 @@
 - [x] Verify existing Understand Anything and MGI-Mind installations.
 - [x] Write BRIEF.md: structure, copy, visual concept, architecture, assumptions.
 - [x] Add MGI-Mind stdio MCP entry to Codex configuration.
-- [ ] Verify memory tools, save project decisions locally.
-- [ ] Resolve GitHub CLI authorization; create public kitsoe-landing repository and initial commit/push.
-- [ ] Add checkpoint/resume scripts and validate recovery behavior.
-- [ ] Scaffold Astro, TypeScript, lint and meaningful checks.
-- [ ] Implement hero, theme system and interactive demonstrations.
-- [ ] Implement services, process, tagline reveal and FAQ.
-- [ ] Implement inquiry form and editable contacts.
-- [ ] Add privacy, terms, 404, favicon and SEO metadata.
+- [x] Verify memory tools, save project decisions locally.
+- [x] Resolve GitHub CLI authorization; create public kitsoe-landing repository and initial commit/push.
+- [x] Add checkpoint/resume scripts and validate recovery behavior (native watcher; actual limit reset awaits occurrence).
+- [x] Scaffold Astro, TypeScript and lint; meaningful checks pending below.
+- [x] Implement hero, theme system and interactive demonstrations.
+- [x] Implement services, process, tagline reveal and FAQ.
+- [x] Implement inquiry form and editable contacts.
+- [x] Add privacy, terms, 404, favicon and SEO metadata.
 - [ ] Check all requested viewport widths, keyboard, reduced motion, both themes and form scenarios.
 - [ ] Run build, types, lint, accessibility and performance checks; fix defects.
 - [ ] Analyze architecture with Understand Anything (agent tooling only).

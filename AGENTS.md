@@ -37,4 +37,4 @@ Run build, TypeScript and lint; run browser/performance checks appropriate to th
 
 ## Recovery
 
-No restart loops or attempts to bypass limits. Checkpoint scripts save local state; resume selects an explicit session or reconstructs context from the files. Human launch may be required after usage limits reset. Never start competing agents automatically.
+No restart loops or attempts to bypass limits. The user explicitly authorized automatic continuation of this chat after usage resets. Read docs/AUTO_RESUME.md. The native-app watcher is the only automatic recovery path; CLI daemon state is not authoritative for the desktop. Never start competing agents. Keep checkpoints current. Once all project work is complete, write .local/project-complete.json so the watcher exits. Do not create scheduled app automations to watch this task.
