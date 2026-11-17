@@ -15,8 +15,8 @@ export function decideRecovery(snapshot, state, config, now = Date.now()) {
   const type = snapshot.thread?.status?.type;
   const turn = snapshot.turns?.[0];
   if (type === 'active' || turn?.status === 'inProgress') return 'active';
-  if (type !== 'idle') return 'unavailable';
-  if (!isUsageLimit(turn)) return 'idle';
+  if (!['idle', 'systemError'].includes(type)) return 'unavailable';
+  if (!isUsageLimit(turn)) return type === 'idle' ? 'idle' : 'unavailable';
   if (state.attempts.some(attempt => attempt.turnId === turn.id)) return 'already-attempted';
   if (state.attempts.length >= config.maxResumes) return 'attempt-limit';
   if (snapshot.ordinaryUsageAllowed !== true) return 'waiting-limit';

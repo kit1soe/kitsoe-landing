@@ -44,7 +44,10 @@ export async function connectCodexApp(serverPath, { timeout = 20000 } = {}) {
       if (response.isError) throw new Error(response.content?.find(item => item.type === 'text')?.text || 'Codex app tool failed');
       const text = response.content?.find(item => item.type === 'text')?.text;
       if (!text) throw new Error('Codex app returned no text result');
-      try { return JSON.parse(text); } catch { throw new Error('Codex app returned an unexpected result format'); }
+      try { return JSON.parse(text); } catch {
+        if (name === 'send_message_to_thread') return { acknowledgement: text };
+        throw new Error('Codex app returned an unexpected result format');
+      }
     },
   };
 }

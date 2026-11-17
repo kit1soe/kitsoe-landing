@@ -24,10 +24,19 @@ test('manual stop, completion, budget, network and auth errors are never resumed
   for (const status of ['interrupted', 'completed']) { const value = snapshot(); value.turns[0].status = status; assert.equal(decideRecovery(value, state, config, 100000), 'idle'); }
   for (const code of ['sessionBudgetExceeded', 'unauthorized', 'httpConnectionFailed', 'other']) { const value = snapshot(); value.turns[0].error.codexErrorInfo = code; assert.equal(decideRecovery(value, state, config, 100000), 'idle'); }
 });
-test('wrong project, missing thread, unload and system errors fail closed', () => {
+test('wrong project, missing thread and unloaded state fail closed', () => {
   const value = snapshot(); value.thread.cwd = 'C:\\unrelated'; assert.equal(decideRecovery(value, state, config, 100000), 'wrong-thread');
   assert.equal(decideRecovery({}, state, config, 100000), 'wrong-thread');
-  for (const type of ['notLoaded', 'systemError', undefined]) { const value = snapshot(); value.thread.status.type = type; assert.equal(decideRecovery(value, state, config, 100000), 'unavailable'); }
+  for (const type of ['notLoaded', undefined]) { const value = snapshot(); value.thread.status.type = type; assert.equal(decideRecovery(value, state, config, 100000), 'unavailable'); }
+});
+test('actual desktop usage failure is systemError with a typographic apostrophe and no error code', () => {
+  const value = snapshot(); value.thread.status.type = 'systemError';
+  value.turns[0].error = { message: 'You’ve hit your usage limit. Try again later.', additionalDetails: null };
+  assert.equal(decideRecovery(value, state, config, 100000), 'resume');
+  value.ordinaryUsageAllowed = false;
+  assert.equal(decideRecovery(value, state, config, 100000), 'waiting-limit');
+  value.turns[0].error = { message: 'Connection was lost.' };
+  assert.equal(decideRecovery(value, state, config, 100000), 'unavailable');
 });
 test('cooldown and maximum attempt count bound automatic work', () => {
   assert.equal(decideRecovery(snapshot(), state, config, 40000), 'cooldown');

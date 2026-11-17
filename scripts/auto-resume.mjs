@@ -1,10 +1,11 @@
-import { readFile, writeFile, rename, mkdir, appendFile, access, unlink } from 'node:fs/promises';
+import { readFile, mkdir, appendFile, access, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import net from 'node:net';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { connectCodexApp } from './codex-app-client.mjs';
 import { decideRecovery, isUsageLimit, RESUME_PROMPT } from './auto-resume-policy.mjs';
+import { atomicWriteJson, readReservations, reserveAttempt } from './recovery-storage.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const local = path.join(root, '.local');
@@ -12,6 +13,7 @@ const statePath = path.join(local, 'auto-resume-state.json');
 const stopPath = path.join(local, 'auto-resume.stop');
 const completePath = path.join(local, 'project-complete.json');
 const logPath = path.join(local, 'auto-resume.jsonl');
+const reservationsPath = path.join(local, 'auto-resume-reservations.jsonl');
 const exists = async filename => { try { await access(filename); return true; } catch { return false; } };
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const config = JSON.parse(await readFile(path.join(local, 'auto-resume-config.json'), 'utf8'));
@@ -28,23 +30,34 @@ await new Promise((resolve, reject) => {
 });
 let app;
 let state = { attempts: [] };
-try { state = { ...state, ...JSON.parse(await readFile(statePath, 'utf8')) }; } catch { /* First run. */ }
+try { state = { ...state, ...JSON.parse(await readFile(statePath, 'utf8')) }; }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
+state.attempts = [...new Map([...state.attempts, ...await readReservations(reservationsPath)].map(attempt => [attempt.turnId, attempt])).values()];
 const started = Date.now();
 state = { ...state, pid: process.pid, startedAt: new Date(started).toISOString(), expiresAt: new Date(started + config.lifetimeMs).toISOString(), threadId: config.threadId, running: true, consecutiveErrors: 0 };
 const persist = async () => {
-  const temp = `${statePath}.${process.pid}.tmp`;
-  await writeFile(temp, JSON.stringify(state, null, 2) + '\n');
-  await rename(temp, statePath);
+  try {
+    await atomicWriteJson(statePath, state);
+    delete state.snapshotError;
+  } catch (error) {
+    // Status is observational. A busy snapshot must not kill recovery; reservations
+    // use a separate fsynced ledger and are mandatory before any send.
+    state.snapshotError = `${error.code || 'error'}: snapshot write deferred`;
+    console.error(`${new Date().toISOString()} ${state.snapshotError}`);
+  }
 };
 const setStatus = async (status, detail) => {
-  if (state.status !== status || detail) await appendFile(logPath, JSON.stringify({ at: new Date().toISOString(), status, ...(detail ? { detail } : {}) }) + '\n');
+  if (state.status !== status || detail) {
+    try { await appendFile(logPath, JSON.stringify({ at: new Date().toISOString(), status, ...(detail ? { detail } : {}) }) + '\n'); }
+    catch (error) { console.error(`${new Date().toISOString()} event log unavailable: ${error.code}`); }
+  }
   state.status = status; state.lastCheck = new Date().toISOString();
   await persist();
 };
 async function snapshot() {
   const result = await app.call('read_thread', { threadId: config.threadId, hostId: 'local', turnLimit: 1, includeOutputs: false, maxOutputCharsPerItem: 80 });
   // Do not request or retain account details while the agent is working.
-  if (result.thread?.status?.type === 'idle' && isUsageLimit(result.turns?.[0])) {
+  if (['idle', 'systemError'].includes(result.thread?.status?.type) && isUsageLimit(result.turns?.[0])) {
     result.ordinaryUsageAllowed = (await app.call('get_usage_limits', {})).ordinaryUsageAllowed;
   }
   return result;
@@ -70,8 +83,9 @@ try {
         decision = decideRecovery(await snapshot(), state, config);
         if (decision === 'resume') {
           const attempt = { turnId: turn.id, at: new Date().toISOString(), result: 'reserved' };
+          await reserveAttempt(reservationsPath, attempt);
           state.attempts.push(attempt);
-          await setStatus('resume-reserved'); // Durable BEFORE the side effect; timeout never retries it.
+          await setStatus('resume-reserved');
           try {
             await app.call('send_message_to_thread', { threadId: config.threadId, hostId: 'local', prompt: RESUME_PROMPT });
             attempt.result = 'sent';
@@ -98,6 +112,6 @@ try {
   }
   if (Date.now() - started >= config.lifetimeMs) await setStatus('expired');
 } finally {
-  state.running = false; state.nextCheck = null; await persist();
-  app?.close(); lock.close();
+  state.running = false; state.nextCheck = null;
+  try { await persist(); } finally { app?.close(); lock.close(); }
 }

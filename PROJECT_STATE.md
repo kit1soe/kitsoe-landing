@@ -1,7 +1,7 @@
 # Project state
 
-Updated: 2026-11-16 (Asia/Yekaterinburg).
-Stage: landing implementation complete; recovery automation and validation in progress.
+Updated: 2026-11-17 (Asia/Yekaterinburg).
+Stage: first implementation and functional checks complete; visual refinement is the priority.
 
 ## Completed
 
@@ -24,7 +24,11 @@ Stage: landing implementation complete; recovery automation and validation in pr
 
 ## Next action
 
-Native-app auto resume is implemented, tested and running. Read docs/AUTO_RESUME.md; use scripts/auto-resume.ps1 -Action Status for actual state. Current chat: 01a1e51e-2ef5-7ea1-b03a-b97c865e03b4. CLI daemon is SEPARATE from desktop app; never use its stale thread state to launch a competitor. Next: save recovery commit, resolve npm minimatch override, finish responsive/accessibility/form/performance QA, architecture analysis, docs and commits. No deployment.
+Latest user clarification: by testing they primarily mean HOW THE PAGE LOOKS. Prioritize direct visual review, composition, typography, spacing, motion and polish across screens; do not substitute automated pass counts for design review.
+
+Auto resume first real run FAILED: usage-limit failure had thread status systemError; original policy only allowed idle. It later crashed on Windows EPERM during state rename. Both fixed 17 November: systemError allowed ONLY with explicit usage-limit failure and backend permission; snapshot retries and independent fsynced reservation ledger prevent crashes/duplicate sends. Actual same-chat delivery tested successfully. Watcher restarted; check scripts/auto-resume.ps1 -Action Status. Current chat: 01a1e51e-2ef5-7ea1-b03a-b97c865e03b4. CLI daemon is separate from Desktop; do not use it for recovery.
+
+Automated browser scenarios all pass at 7 widths in both themes, form/demos/menu/storage/reduced motion/no-JS routes; axe zero violations at 390 and 1440 both themes. npm audit fixed (0 vulnerabilities). Lighthouse result exists in .local/lighthouse-mobile.report.json, not yet read. Need direct visual refinement, architecture graph via Understand Anything (skill fully read, analysis NOT yet run), memory update, final docs and commits. No deployment. Browser preview at :4321, production preview :4322; verify server processes are still live after the overnight pause.
 
 ## Contacts
 
