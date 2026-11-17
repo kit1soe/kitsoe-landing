@@ -98,8 +98,8 @@
   .qualities p { display: flex; align-items: center; gap: var(--s16); font-size: .875rem; line-height: 1.25rem; font-weight: 500; }
   .quality-number { color: var(--accent); }
   .demo-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s24); }
-  .demo-item { min-inline-size: 0; display:flex; flex-direction:column; }
-  .demo-item > .demo-description { display: flex; align-items: start; gap: var(--s24); margin-block-start: var(--s24); }
+  .demo-item { min-inline-size: 0; display:grid; grid-row:span 2; grid-template-rows:subgrid; row-gap:var(--s24); }
+  .demo-item > .demo-description { display: flex; align-items: start; gap: var(--s24); }
   .demo-description p { margin-block-start: var(--s8); color: var(--muted); max-inline-size: 400px; }
   .demo-number { color: var(--accent); padding-block-start: var(--s4); }
   .manifesto { padding-block: var(--s80); text-align: center; }

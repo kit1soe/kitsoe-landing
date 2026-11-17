@@ -19,8 +19,8 @@ Stage: burgundy visual refinement implemented; final visual inspection and archi
 - GitHub CLI login, public repository and initial push verified.
 - Codex 0.167.2 supports resume [SESSION_ID] [PROMPT] and -C; help checked.
 - Node 26.8.1 and pnpm available. Astro 7.4.12 registry version checked (requires Node >=22.23.4).
-- Astro build passes. Initial type check passed (deprecated lint config since fixed). Lint fix needs recheck. Browser smoke passes; screenshots are in ignored .local/ and need visual review.
-- npm dev dependency minimatch override not yet resolved in lockfile; fix before final audit.
+- Astro build, type check, lint and 15 native tests pass. Baseline browser scenarios passed; direct visual refinement recorded in docs/VISUAL_REVIEW.md.
+- npm dependency audit resolved: zero vulnerabilities at the completed audit.
 
 ## Latest checkpoint — 17 November, 18:02 Yekaterinburg
 

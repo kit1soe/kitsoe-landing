@@ -1,9 +1,55 @@
 # kitsoe
 
-Personal developer landing page for small businesses and individual projects.
+Личный лендинг разработчика: услуги, живые демонстрации, этапы работы, FAQ и подготовка обращения. Astro, TypeScript, локальный Manrope, бордовая палитра и две темы.
 
-Current stage: requirements and tooling preparation. See [BRIEF.md](BRIEF.md) for product scope, [PROJECT_STATE.md](PROJECT_STATE.md) for the exact resume point and [TASKS.md](TASKS.md) for remaining work.
+## Запуск
 
-The website is intended for local development first. Publishing requires a separate instruction from the owner. Public repository access does not imply public website deployment.
+Node.js 22.23.4 или новее:
 
-No secrets or local memory are committed. Public contact details are supplied by the owner and will be editable centrally.
+```powershell
+npm ci
+npm run dev
+```
+
+Адрес: http://127.0.0.1:4321. Остановка: Ctrl+C в терминале сервера.
+
+```powershell
+npm run build
+npm run preview -- --port 4322
+```
+
+Готовая сборка доступна на http://127.0.0.1:4322.
+
+## Изменение сайта
+
+- Контакты, бренд и метаданные: `src/config/site.ts`.
+- Тексты секций: `src/components/`; композиция: `src/pages/index.astro`.
+- Палитра, адаптивность и движение: `src/styles/global.css`.
+- Темы и демонстрации: `src/scripts/site.ts`.
+- Форма: `src/components/Contact.astro`, `src/scripts/inquiry.ts`, `src/lib/inquiry.ts`.
+
+Форма создаёт черновик локально. Посетитель проверяет его и сам отправляет в Telegram или почтовой программе. Если текст не подставился, предусмотрено копирование. Серверного приёма заявок, базы данных, аналитики и автоматической отправки нет. Поля не сохраняются после перезагрузки; в браузере хранится только выбор темы.
+
+Реальные проекты в будущем можно добавить отдельной секцией после демонстраций. Текущие примеры явно обозначены как демонстрации.
+
+## Проверка
+
+```powershell
+npm run check
+npm run lint
+npm test
+npm run build
+npm run test:browser
+```
+
+Браузерные сценарии используют установленный Microsoft Edge; канал меняется через `BROWSER_CHANNEL`, адрес через `TEST_URL`. Артефакты: `.local/browser/` (не в Git).
+
+Отдельно осматривать композицию, типографику, переходы, раскрытый FAQ и форму на ширинах 360/390/430/768/1024/1440/1920 px в обеих темах. Автоматические проверки не оценивают художественное качество.
+
+## Публикация и инструменты
+
+Сайт не опубликован. Публичный GitHub содержит исходники. Размещение требует отдельного решения владельца; пока действуют noindex и запрет обхода robots. Для будущего домена предусмотрены `PUBLIC_SITE_URL` и `PUBLIC_ALLOW_INDEXING` в `.env.example`.
+
+[Auto resume](docs/AUTO_RESUME.md) возобновляет тот же чат после подтверждённого лимита и разрешения сервера. Полный реальный цикл проверен 17 ноября 2026 года. Компьютер и Codex должны оставаться включёнными.
+
+MGI-Mind и Understand Anything используются только агентом локально. Память, граф, журналы, снимки, зависимости и `.env` исключены из Git и не входят в сайт. Решения и точка восстановления: `DECISIONS.md`, `TASKS.md`, `PROJECT_STATE.md`.
