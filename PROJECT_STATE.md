@@ -1,7 +1,7 @@
 # Project state
 
 Updated: 2026-11-17 (Asia/Yekaterinburg).
-Stage: first implementation and functional checks complete; visual refinement is the priority.
+Stage: burgundy visual refinement implemented; final visual inspection and architecture analysis in progress.
 
 ## Completed
 
@@ -21,6 +21,15 @@ Stage: first implementation and functional checks complete; visual refinement is
 - Node 26.8.1 and pnpm available. Astro 7.4.12 registry version checked (requires Node >=22.23.4).
 - Astro build passes. Initial type check passed (deprecated lint config since fixed). Lint fix needs recheck. Browser smoke passes; screenshots are in ignored .local/ and need visual review.
 - npm dev dependency minimatch override not yet resolved in lockfile; fix before final audit.
+
+## Latest checkpoint — 17 November, 18:02 Yekaterinburg
+
+- REAL AUTO RESUME SUCCESS: waiting-limit 08:22 UTC, backend allowed and one resume-sent 13:02 UTC, root received and continued. No duplicate attempt. Watcher PID26488 remains active.
+- Committed first full website as 6b0dbad. Uncommitted visual refinements: deep burgundy primary palette, emerald task demo, root crossfade theme transition, entry/hover/FAQ/choice motion, readable tagline reveal, mobile services full-width descriptions, matched demo card heights.
+- Type check/lint/build and 15 native tests passed after most refinements; final CSS mobile description adjustment after that. Direct CUA inspection: mobile 390 light entire page and dark draft; desktop hero both themes and light experience. Draft was prepared with fictional Anna/example.com but NOT sent; clear before final preview.
+- Lighthouse prior baseline performance100, accessibility96 (tagline opacity and lamp visible/accessibility label mismatches FIXED), best practices100, SEO66 because intentionally noindex. Do not claim latest Lighthouse retest.
+- Architecture subagent pipeline hit same usage limit; resumed existing architecture agent after actual reset. .ua has scan/batches/extracted structure. Await graph completion.
+- Finish visual comparison across widths, docs/README, final focused commit/push, memory. Preserve no deployment. Do not create completion marker before remaining work is done.
 
 ## Next action
 

@@ -88,7 +88,7 @@ try {
       await page.locator('#prepare-inquiry').click();
       await page.locator('#draft-copy').click();
       await page.waitForFunction(() => document.querySelector('#copy-status').textContent.includes('вручную'));
-      assert.equal(await page.locator('#draft-text').evaluate(el => el.selectionEnd - el.selectionStart === el.value.length), true);
+      assert.equal(await page.locator('#draft-text').evaluate(el => { const textarea = /** @type {HTMLTextAreaElement} */ (el); return textarea.selectionEnd - textarea.selectionStart === textarea.value.length; }), true);
     } finally { await context.close(); }
   });
   await run('theme follows system, persists preference, syncs tabs and survives blocked storage', async () => {

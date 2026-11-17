@@ -1,6 +1,8 @@
 const themeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')!;
 const systemTheme = matchMedia('(prefers-color-scheme: dark)');
 const themeButtons = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+let themeChanging = false;
 const resolvedTheme = () => themeMeta.content === 'light dark' ? (systemTheme.matches ? 'dark' : 'light') : themeMeta.content;
 function syncTheme() {
   const theme = resolvedTheme();
@@ -12,12 +14,20 @@ function syncTheme() {
   document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => {meta.content=theme==='dark'?'#181818':'#f5f3ef';});
 }
 themeButtons.forEach(button => button.addEventListener('click',() => {
+  if(themeChanging) return;
   const target = resolvedTheme()==='dark'?'light':'dark';
   const system = systemTheme.matches?'dark':'light';
   const preference = target === system ? null : target;
-  themeMeta.content = preference ?? 'light dark';
-  try { if(preference) localStorage.setItem('kitsoe-theme',preference); else localStorage.removeItem('kitsoe-theme'); } catch { /* Persistence is optional. */ }
-  syncTheme();
+  const applyTheme = () => {
+    themeMeta.content = preference ?? 'light dark';
+    try { if(preference) localStorage.setItem('kitsoe-theme',preference); else localStorage.removeItem('kitsoe-theme'); } catch { /* Persistence is optional. */ }
+    syncTheme();
+  };
+  // Only the palette changes. Keep focus on the same toggle throughout.
+  if(!document.startViewTransition || reducedMotion.matches) { applyTheme(); return; }
+  themeChanging = true;
+  const transition = document.startViewTransition(applyTheme);
+  void transition.finished.catch(() => { /* A skipped visual transition still applies the theme. */ }).finally(() => { themeChanging = false; });
 }));
 systemTheme.addEventListener('change',syncTheme);
 addEventListener('storage',event => {
@@ -45,7 +55,6 @@ if(lamp) {
     const enabled=lamp.dataset.lit!=='true';
     lamp.dataset.lit=String(enabled);
     light.setAttribute('aria-pressed',String(enabled));
-    lamp.querySelector('[data-light-label]')!.textContent=enabled?'Свет включён':'Свет выключен';
   });
   const brightness=lamp.querySelector<HTMLInputElement>('#brightness')!;
   brightness.addEventListener('input',()=>{
@@ -63,7 +72,7 @@ if(booking) {
     booking.querySelectorAll(`[${group}]`).forEach(peer=>peer.setAttribute('aria-pressed',String(peer===button)));
     const day=booking.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')!.dataset.day;
     const slot=booking.querySelector<HTMLElement>('[data-slot][aria-pressed="true"]')!.dataset.slot;
-    booking.querySelector('[data-booking-result]')!.textContent=`Выбрано: ${day?.toLowerCase()}, ${slot}. Это пример интерфейса. Запись не создаётся.`;
+    booking.querySelector('[data-booking-selection]')!.textContent=`Выбрано: ${day?.toLowerCase()}, ${slot}.`;
   }));
 }
 const tasks=document.querySelector<HTMLElement>('[data-tasks]');
@@ -74,7 +83,6 @@ tasks?.addEventListener('change',()=>{
   tasks.querySelector('[data-progress-text]')!.textContent=`${count} из 3`;
 });
 
-const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 if('IntersectionObserver' in window) {
   const reveals=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');reveals.unobserve(entry.target);}});
