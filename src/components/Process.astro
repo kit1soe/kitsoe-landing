@@ -1,0 +1,12 @@
+---
+const steps = [
+  ['01', 'Сначала понимание', 'Обсуждаем вашу идею, аудиторию и задачи. Согласуем объём, стоимость, сроки и предоплату. Вы знаете, с чего начинаем и к чему идём.'],
+  ['02', 'Затем воплощение', 'Продумываю структуру, собираю дизайн и разрабатываю интерфейс. Показываю результат по этапам, чтобы решения оставались понятными.'],
+  ['03', 'В конце каждая деталь', 'Проверяю сценарии и разные экраны, вношу согласованные правки. Передаю готовый проект, исходники и инструкции по запуску.'],
+];
+---
+<section id="process" class="section wrap" aria-labelledby="process-title">
+  <div class="section-heading" data-reveal><div><p class="eyebrow">03 / Подход</p><h2 id="process-title" class="heading-2">Понятные этапы.<br />Точный результат.</h2></div><p class="body-3">Прямая связь с разработчиком, понятные этапы и внимание к тому, что важно вашему проекту.</p></div>
+  <div class="steps">{steps.map(([n,title,text]) => <article class="step" data-reveal><div class="step-index caption-4">{n}</div><h3 class="heading-5">{title}</h3><p class="body-3">{text}</p></article>)}</div>
+  <div class="process-note" data-reveal><span aria-hidden="true">↳</span><p class="body-6">Правки в рамках согласованной задачи включены до завершения работы. Новые идеи и расширение проекта обсуждаем отдельно.</p></div>
+</section>

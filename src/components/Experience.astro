@@ -1,0 +1,44 @@
+---
+const tasks = ['Продумать структуру', 'Собрать интерфейс', 'Проверить результат'];
+---
+<section id="experience" class="section wrap" aria-labelledby="experience-title">
+  <div class="section-heading" data-reveal>
+    <div><p class="eyebrow">01 / Возможности</p><h2 id="experience-title" class="heading-2">Не просто посмотреть.<br />Попробовать.</h2></div>
+    <p class="body-3">Хороший интерфейс чувствуется в действии. Выберите время или соберите небольшой план. Всё работает прямо здесь.</p>
+  </div>
+  <div class="demo-grid">
+    <article class="demo-item" data-reveal>
+      <div class="demo-window booking-window" data-booking>
+        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация записи</span><span aria-hidden="true">↗</span></div>
+        <div class="booking-brand"><span class="booking-mark" aria-hidden="true">f.</span><div><h3 class="heading-5">Время для себя</h3><p class="caption-2 muted">Консультация · 30 минут</p></div></div>
+        <div class="booking-days" role="group" aria-label="День для демонстрационной записи">
+          <button type="button" class="choice-button" data-day="Сегодня" aria-pressed="false" disabled>Сегодня</button>
+          <button type="button" class="choice-button" data-day="Завтра" aria-pressed="true" disabled>Завтра</button>
+          <button type="button" class="choice-button" data-day="Через 2 дня" aria-pressed="false" disabled>Через 2 дня</button>
+        </div>
+        <div><p class="caption-2 muted" style="margin-block-end: var(--s8)">Выберите удобное время</p><div class="booking-slots" role="group" aria-label="Время для демонстрационной записи">
+          <button type="button" class="choice-button" data-slot="10:00" aria-pressed="false" disabled>10:00</button>
+          <button type="button" class="choice-button" data-slot="11:30" aria-pressed="true" disabled>11:30</button>
+          <button type="button" class="choice-button" data-slot="15:00" aria-pressed="false" disabled>15:00</button>
+        </div></div>
+        <p class="demo-result caption-2" role="status" data-booking-result>Выбрано: завтра, 11:30.<br /><span class="caption-5">Это пример интерфейса. Запись не создаётся.</span></p>
+      </div>
+      <div class="demo-description"><span class="demo-number caption-4">01</span><div><h3 class="heading-6">Запись без лишних шагов</h3><p class="body-6">Для услуг, консультаций и встреч. Понятный выбор и мгновенная обратная связь.</p></div></div>
+    </article>
+    <article class="demo-item" data-reveal>
+      <div class="demo-window task-window" data-tasks>
+        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация приложения</span><span aria-hidden="true">↗</span></div>
+        <div class="task-heading"><div><p class="caption-2 muted">Рабочее пространство</p><h3 class="heading-5">От идеи к результату</h3></div><span class="demo-label">Ваш план</span></div>
+        <div class="task-checks">{tasks.map((task, i) => <label for={`demo-task-${i}`}><input id={`demo-task-${i}`} type="checkbox" name={`demo-task-${i}`} checked={i === 0} disabled /><span class="body-6">{task}</span></label>)}</div>
+        <div><div class="progress-label caption-2"><label for="demo-progress">Готовность</label><output data-progress-text aria-live="polite">1 из 3</output></div><progress id="demo-progress" max="3" value="1">1 из 3</progress></div>
+        <p class="caption-5 muted">Отметьте пункты. Это локальная демонстрация.</p>
+      </div>
+      <div class="demo-description"><span class="demo-number caption-4">02</span><div><h3 class="heading-6">Порядок в повседневных задачах</h3><p class="body-6">Для сервисов и внутренних инструментов. Всё нужное на виду, каждое действие на своём месте.</p></div></div>
+    </article>
+  </div>
+  <noscript><p class="no-script body-6">Для интерактивных примеров включите JavaScript. Все услуги и контакты доступны ниже.</p></noscript>
+</section>
+<section class="manifesto wrap" aria-label="Внимание к деталям">
+  <p class="eyebrow">Маленькие решения. Цельное впечатление.</p>
+  <p class="heading-2 word-reveal">С первого взгляда до последнего клика. Каждая деталь работает на вашу цель.</p>
+</section>

@@ -1,0 +1,34 @@
+---
+import { site, telegramUrl, emailUrl } from '../config/site';
+import { projectTypes, budgets } from '../lib/inquiry';
+---
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="wrap contact-layout">
+    <div class="contact-copy" data-reveal><p class="eyebrow">05 / Начнём с разговора</p><h2 id="contact-title" class="heading-2">От вашей идеи<br />к вашему сайту.</h2><p class="body-3 muted">Расскажите, что хотите сделать. Обсудим задачу, возможные решения и стоимость. Первая консультация бесплатная.</p>
+      <div class="contact-links"><a class="body-6" href={telegramUrl} target="_blank" rel="noopener noreferrer"><span>Telegram</span> @{site.telegram} ↗</a><a class="body-6" href={emailUrl}><span>Email</span> {site.email} ↗</a></div>
+    </div>
+    <div>
+      <form id="inquiry-form" class="contact-form" action={emailUrl} method="post" enctype="text/plain" aria-labelledby="contact-title">
+        <p class="caption-2 muted">Имя, контакт и тип проекта обязательны. Остальное по желанию.</p>
+        <div class="form-grid">
+          <div class="field"><label for="inquiry-name">Ваше имя <span aria-hidden="true">*</span></label><input id="inquiry-name" name="name" autocomplete="name" required minlength="2" maxlength="80" placeholder="Как к вам обращаться" aria-invalid="false" /><p class="field-error" id="name-error"></p></div>
+          <div class="field"><label for="inquiry-contact">Как с вами связаться <span aria-hidden="true">*</span></label><input id="inquiry-contact" name="contact" type="text" autocomplete="email" required maxlength="160" autocapitalize="none" spellcheck="false" placeholder="Email, @telegram или телефон" aria-invalid="false" aria-describedby="contact-hint" /><span id="contact-hint" class="caption-5 muted">Например, name@example.com или @username.</span><p class="field-error" id="contact-error"></p></div>
+          <div class="field"><label for="inquiry-project">Что нужно сделать <span aria-hidden="true">*</span></label><select id="inquiry-project" name="project" required aria-invalid="false"><option value="">Выберите тип проекта</option>{projectTypes.map(type => <option value={type}>{type}</option>)}</select><p class="field-error" id="project-error"></p></div>
+          <div class="field"><label for="inquiry-budget">Ориентир по бюджету</label><select id="inquiry-budget" name="budget" aria-invalid="false">{budgets.map(budget => <option value={budget}>{budget}</option>)}</select><p class="field-error" id="budget-error"></p></div>
+        </div>
+        <div class="field"><label for="inquiry-comment">Пара слов о проекте</label><textarea id="inquiry-comment" name="comment" rows="4" maxlength="1200" placeholder="Какая задача у сайта? Есть ли примеры, пожелания или сроки?" aria-invalid="false"></textarea><p class="field-error" id="comment-error"></p></div>
+        <fieldset class="channel-group"><legend>Где продолжим общение</legend><label for="channel-telegram"><input id="channel-telegram" type="radio" name="channel" value="telegram" checked /> Telegram</label><label for="channel-email"><input id="channel-email" type="radio" name="channel" value="email" /> Email</label></fieldset>
+        <div class="form-bottom"><button type="submit" class="button" id="prepare-inquiry" aria-expanded="false" aria-controls="inquiry-draft" disabled>Подготовить обращение <span aria-hidden="true">↗</span></button><p class="caption-5 muted">Сначала покажу текст сообщения. Вы отправите его сами в Telegram или почте. <a href="/privacy/">О данных</a>.</p></div>
+        <p id="form-message" class="form-message caption-2" role="status" aria-live="polite"></p>
+      </form>
+      <noscript><p class="no-script body-6">Для подготовки сообщения включите JavaScript или напишите напрямую: <a href={telegramUrl}>Telegram</a> / <a href={emailUrl}>email</a>.</p></noscript>
+      <section id="inquiry-draft" class="draft-panel" hidden aria-labelledby="draft-title">
+        <h3 id="draft-title" class="heading-6" tabindex="-1">Обращение готово</h3><p class="caption-2 muted">Проверьте текст и перейдите в выбранный канал. Сообщение ещё не отправлено.</p>
+        <label for="draft-text" class="visually-hidden">Текст обращения</label><textarea id="draft-text" readonly></textarea>
+        <div class="draft-actions"><a id="draft-open" class="button" href={telegramUrl} target="_blank" rel="noopener noreferrer">Открыть Telegram ↗</a><button type="button" class="button button-outline" id="draft-copy">Скопировать текст</button></div>
+        <p id="copy-status" class="caption-2 muted" role="status"></p>
+      </section>
+    </div>
+  </div>
+</section>
+<script>import '../scripts/inquiry';</script>

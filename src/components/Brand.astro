@@ -1,0 +1,10 @@
+---
+interface Props { large?: boolean }
+const { large = false } = Astro.props;
+---
+<a href="/" class:list={['brand', { 'brand-large': large }]} aria-label="kitsoe — на главную">
+  <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+    <path d="M9 8h5v24H9V8Zm10 12L31 8h-7L12 20l12 12h7L19 20Z" fill="currentColor" />
+  </svg>
+  <span>kitsoe<span class="brand-dot">.</span></span>
+</a>

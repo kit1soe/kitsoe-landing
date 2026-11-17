@@ -1,0 +1,36 @@
+---
+import Brand from './Brand.astro';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+const base = home ? '' : '/';
+---
+<header class="site-header">
+  <nav class="nav-shell" aria-label="Основная навигация">
+    <Brand />
+    <div class="desktop-nav">
+      <a href={`${base}#experience`}>Возможности</a>
+      <a href={`${base}#services`}>Услуги</a>
+      <a href={`${base}#process`}>Подход</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-button theme-toggle js-only" type="button" aria-label="Переключить тему" title="Переключить тему">
+        <span class="theme-symbol" aria-hidden="true"></span>
+      </button>
+      <a class="button button-small nav-cta" href={`${base}#contact`}>Обсудить проект <span aria-hidden="true">↗</span></a>
+      <button class="icon-button menu-toggle js-only" type="button" aria-label="Открыть меню" aria-controls="mobile-menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<dialog id="mobile-menu" class="mobile-menu" aria-label="Навигация по сайту">
+  <div class="mobile-menu-top"><Brand /><button type="button" class="icon-button menu-close" aria-label="Закрыть меню">×</button></div>
+  <nav aria-label="Мобильная навигация">
+    <a href={`${base}#experience`}>Возможности <span aria-hidden="true">↗</span></a>
+    <a href={`${base}#services`}>Услуги <span aria-hidden="true">↗</span></a>
+    <a href={`${base}#process`}>Подход <span aria-hidden="true">↗</span></a>
+    <a href={`${base}#faq`}>Вопросы <span aria-hidden="true">↗</span></a>
+    <a href={`${base}#contact`}>Обсудить проект <span aria-hidden="true">↗</span></a>
+  </nav>
+  <p class="caption-2 muted">От идеи к работающему решению.</p>
+</dialog>

@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import lamp from '../assets/lamp.png';
+---
+<section class="hero wrap" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot"></span> Независимый разработчик</p>
+    <h1 id="hero-title" class="heading-1 hero-title">Сайты, в которых<br class="desktop-break" /> всё на своём месте<span class="accent-dot">.</span></h1>
+    <p class="hero-description body-3">Разрабатываю лендинги и веб приложения для бизнеса и личных проектов. От первого впечатления до понятного следующего шага.</p>
+    <div class="hero-action"><a class="button" href="#contact">Обсудить проект <span aria-hidden="true">↗</span></a><span class="caption-2 muted">Бесплатная консультация.<br /> Стоимость после обсуждения.</span></div>
+    <div class="hero-signature"><span class="signature-line"></span><span class="caption-2">Внимание к деталям.<br /><span class="muted">На каждом этапе.</span></span></div>
+  </div>
+  <div class="hero-showcase" data-lamp data-surface="chalk" data-lit="true">
+    <div class="showcase-caption caption-2"><span>01 / Живой интерфейс</span><span class="demo-label">Демонстрация</span></div>
+    <div class="lamp-stage">
+      <span class="stage-word" aria-hidden="true">forma</span>
+      <span class="stage-ring" aria-hidden="true"></span>
+      <span class="lamp-glow" aria-hidden="true"></span>
+      <Image src={lamp} alt="Скульптурная настольная лампа с рифлёным керамическим плафоном и бронзовым основанием" widths={[360, 540, 720]} sizes="(max-width: 600px) 85vw, (max-width: 1000px) 460px, 440px" format="webp" loading="eager" fetchpriority="high" class="lamp-image" />
+      <button type="button" class="light-switch js-only" aria-pressed="true" aria-label="Подсветка лампы"><span class="light-indicator" aria-hidden="true"></span><span data-light-label>Свет включён</span></button>
+      <span class="stage-index caption-5" aria-hidden="true">ОБЪЕКТ № 01</span>
+    </div>
+    <div class="product-meta"><div><span class="caption-2 muted">Предметный дизайн</span><h2 class="heading-5">Тёплая форма</h2></div><a class="product-arrow" href="#experience" aria-label="Другие примеры интерфейсов">↗</a></div>
+    <div class="product-controls js-only">
+      <fieldset class="surface-options"><legend class="caption-2">Окружение</legend><div class="swatch-row">
+        <label for="surface-chalk" title="Мел"><input id="surface-chalk" type="radio" name="surface" value="chalk" checked aria-label="Мел" /><span class="swatch swatch-chalk"></span></label>
+        <label for="surface-sand" title="Песок"><input id="surface-sand" type="radio" name="surface" value="sand" aria-label="Песок" /><span class="swatch swatch-sand"></span></label>
+        <label for="surface-graphite" title="Графит"><input id="surface-graphite" type="radio" name="surface" value="graphite" aria-label="Графит" /><span class="swatch swatch-graphite"></span></label>
+      </div></fieldset>
+      <div class="brightness-control"><label for="brightness" class="caption-2">Яркость <output for="brightness" id="brightness-value">70%</output></label><input id="brightness" name="brightness" type="range" min="10" max="100" value="70" step="1" /></div>
+    </div>
+    <p class="demo-footnote caption-5">Пример карточки для вашего сайта. Предмет не продаётся.</p>
+  </div>
+</section>
+<div class="qualities wrap">
+  <p><span class="quality-number caption-5">01</span> Понятная структура</p>
+  <p><span class="quality-number caption-5">02</span> Выверенные детали</p>
+  <p><span class="quality-number caption-5">03</span> Любой экран</p>
+</div>

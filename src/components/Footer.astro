@@ -1,0 +1,15 @@
+---
+import Brand from './Brand.astro';
+import { emailUrl, telegramUrl } from '../config/site';
+---
+<footer class="site-footer wrap">
+  <div class="footer-top"><Brand large /><p class="body-6 muted">Продумано. Разработано. Доведено до деталей.</p></div>
+  <div class="footer-bottom caption-2">
+    <span>© {new Date().getFullYear()} kitsoe</span>
+    <a href={telegramUrl} target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+    <a href={emailUrl}>Email ↗</a>
+    <a href="/privacy/">Конфиденциальность</a>
+    <a href="/terms/">Порядок работы</a>
+    <a href="#top" class="back-top">Наверх ↑</a>
+  </div>
+</footer>

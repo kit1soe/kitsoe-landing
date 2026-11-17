@@ -1,0 +1,18 @@
+---
+const services = [
+  { n: '01', title: 'Лендинги', text: 'Одна идея. Одна цель. Страница, которая раскрывает ваше предложение и помогает посетителю сделать следующий шаг.', tags: ['Услуги', 'Личный бренд', 'Запуск продукта'] },
+  { n: '02', title: 'Сайты для бизнеса', text: 'Ваше дело в понятной форме: услуги, команда, каталог или портфолио. Структура, которой удобно пользоваться и которую можно развивать.', tags: ['Презентация', 'Каталог', 'Портфолио'] },
+  { n: '03', title: 'Веб приложения', text: 'Инструменты, которые решают конкретную задачу. От записи на услугу до личного кабинета и рабочего пространства.', tags: ['Сервисы', 'Личные кабинеты', 'Автоматизация'] },
+];
+---
+<section id="services" class="section services" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="section-heading" data-reveal><div><p class="eyebrow">02 / Услуги</p><h2 id="services-title" class="heading-2">Под вашу задачу.<br />С вашим характером.</h2></div><p class="body-3">Вы рассказываете о цели.<br />Я превращаю её в продуманное решение.</p></div>
+    <div>{services.map(service => <article class="service-row" data-reveal>
+      <span class="service-number caption-4">{service.n}</span><h3 class="heading-4">{service.title}</h3>
+      <div><p class="body-3">{service.text}</p><div class="service-tags caption-5">{service.tags.map(tag => <span>{tag}</span>)}</div></div>
+      <a class="service-arrow" href="#contact" aria-label={`Обсудить проект: ${service.title}`}>↗</a>
+    </article>)}</div>
+    <p class="caption-2 muted" style="margin-block-start: var(--s24)">Стоимость и сроки определяются после обсуждения объёма. Первая консультация бесплатная.</p>
+  </div>
+</section>
