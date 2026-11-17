@@ -40,10 +40,17 @@ syncTheme();
 const lightField=document.querySelector<HTMLElement>('[data-light-field]');
 const atmosphere=lightField?.querySelector<HTMLElement>('.hero-atmosphere');
 const cursorLight=lightField?.querySelector<HTMLElement>('.cursor-light');
+const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere-toggle');
+atmosphereToggle?.addEventListener('click',()=>{
+  const paused=lightField?.dataset.motionPaused !== 'true';
+  if(lightField) lightField.dataset.motionPaused=String(paused);
+  if(paused) atmosphere?.classList.remove('is-active');
+  atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
+});
 if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches && !reducedMotion.matches) {
   let frame=0, x=0, y=0;
   lightField.addEventListener('pointermove',event=>{
-    if(reducedMotion.matches) return;
+    if(reducedMotion.matches || lightField.dataset.motionPaused==='true') return;
     const bounds=atmosphere.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
     if(!frame) frame=requestAnimationFrame(()=>{cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`; frame=0;});
     atmosphere.classList.add('is-active');

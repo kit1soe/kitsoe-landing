@@ -181,10 +181,12 @@
   @supports (backdrop-filter: blur(16px)) {
     .hero-showcase { background:color-mix(in oklab, var(--surface) 83%, transparent); backdrop-filter:blur(16px); }
   }
-  .hero-atmosphere { position:absolute; z-index:-1; inset:-8% -8%; overflow:clip; pointer-events:none; }
+  .hero-atmosphere { position:absolute; z-index:-1; inset:0; overflow:clip; pointer-events:none; }
   .hero-atmosphere > span { position:absolute; inline-size:65%; aspect-ratio:1; border-radius:50%; filter:blur(48px); opacity:.32; }
   .hero-atmosphere > span:first-child { inset:0 auto auto 5%; background:radial-gradient(circle,#c39c9c,transparent 65%); }
   .hero-atmosphere > span:nth-child(2) { inset:auto 0 0 auto; background:radial-gradient(circle,#b9996c,transparent 65%); }
+  .atmosphere-toggle { align-items:center; gap:var(--s8); margin-block-start:var(--s24); padding:var(--s8) 0; border:0; background:none; color:var(--muted); font-size:.75rem; line-height:1rem; }
+  .atmosphere-toggle:hover { color:var(--accent); }
   .hero-atmosphere > .cursor-light { inset:0 auto auto 0; inline-size:38rem; background:radial-gradient(circle,#cf8f96,transparent 65%); opacity:0; transform:translate(-50%,-50%); transition:opacity .6s var(--ease); }
   [data-theme='dark'] .hero-atmosphere > span { opacity:.2; }
   [data-theme='dark'] .hero-atmosphere > .cursor-light { opacity:0; }
@@ -280,9 +282,10 @@
   .lamp-image { transition:filter .6s var(--ease); }
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior:smooth; }
-    .hero-atmosphere > span:first-child { animation:ambient-arrive 3s var(--ease) both; }
-    .hero-atmosphere > span:nth-child(2) { animation:ambient-arrive 3.8s var(--ease) both; }
-    @keyframes ambient-arrive { from { opacity:0; transform:scale(.8) translateY(32px); } }
+    .hero-atmosphere > span:first-child { animation:ambient-drift 18s ease-in-out infinite alternate; }
+    .hero-atmosphere > span:nth-child(2) { animation:ambient-drift 22s ease-in-out infinite alternate-reverse; }
+    [data-motion-paused='true'] .hero-atmosphere > span { animation-play-state:paused; }
+    @keyframes ambient-drift { from { transform:translate(-6%, -3%) scale(.9); } to { transform:translate(9%, 7%) scale(1.12); } }
     ::view-transition-old(root) { animation:theme-out .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-new(root) { animation:theme-in .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-group(root) { animation-duration:.65s; }
@@ -330,6 +333,7 @@
     @keyframes menu-in { from { opacity:0;transform:translateY(24px); } to { opacity:1;transform:none; } }
   }
   @media (prefers-reduced-motion: reduce) {
+    .atmosphere-toggle { display:none !important; }
     :where(a,button):active { transform:none; }
     ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation:none; }
     .reveal-ready { opacity:1; transform:none; }
