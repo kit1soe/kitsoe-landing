@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import lamp from '../assets/lamp.png';
 ---
-<section class="hero wrap" aria-labelledby="hero-title">
+<section class="hero wrap" aria-labelledby="hero-title" data-light-field>
+  <div class="hero-atmosphere" aria-hidden="true"><span></span><span></span><span class="cursor-light"></span></div>
   <div class="hero-copy">
     <p class="eyebrow"><span class="status-dot"></span> Независимый разработчик</p>
     <h1 id="hero-title" class="heading-1 hero-title">Сайты, в которых<br class="desktop-break" /> всё на своём месте<span class="accent-dot">.</span></h1>

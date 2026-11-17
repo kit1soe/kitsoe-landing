@@ -86,8 +86,8 @@
   .section-heading { display: flex; justify-content: space-between; align-items: end; gap: var(--s48); margin-block-end: var(--s48); }
   .section-heading h2 { max-inline-size: 680px; margin-block-start: var(--s24); }
   .section-heading > p { max-inline-size: 350px; color: var(--muted); }
-  .hero { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); align-items: center; gap: var(--s64); padding-block: var(--s64); }
-  .hero-copy { min-inline-size: 0; }
+  .hero { position:relative; isolation:isolate; display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); align-items: center; gap: var(--s64); padding-block: var(--s64); }
+  .hero-copy { position:relative; min-inline-size: 0; }
   .hero-title { margin-block: var(--s24); max-inline-size: 680px; background: linear-gradient(100deg,var(--heading-from),var(--heading-to)); background-clip: text; -webkit-background-clip: text; color: transparent; }
   .accent-dot { color: var(--accent); }
   .hero-description { max-inline-size: 440px; color: var(--muted); }
@@ -177,7 +177,19 @@
   .mobile-menu nav { display:flex; flex-direction:column; gap: var(--s8); margin-block: var(--s64); }
   .mobile-menu nav a { display:flex; justify-content:space-between; gap: var(--s16); padding-block:var(--s16); font-size:1.5rem; line-height:2rem; font-weight:500; }
   .status-dot { inline-size: 6px; block-size: 6px; background: var(--accent); border-radius: 50%; }
-  .hero-showcase { padding: var(--s16); background: var(--surface); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); min-inline-size: 0; }
+  .hero-showcase { position:relative; padding: var(--s16); background: var(--surface); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); min-inline-size: 0; }
+  @supports (backdrop-filter: blur(16px)) {
+    .hero-showcase { background:color-mix(in oklab, var(--surface) 83%, transparent); backdrop-filter:blur(16px); }
+  }
+  .hero-atmosphere { position:absolute; z-index:-1; inset:-8% -8%; overflow:clip; pointer-events:none; }
+  .hero-atmosphere > span { position:absolute; inline-size:65%; aspect-ratio:1; border-radius:50%; filter:blur(48px); opacity:.32; }
+  .hero-atmosphere > span:first-child { inset:0 auto auto 5%; background:radial-gradient(circle,#c39c9c,transparent 65%); }
+  .hero-atmosphere > span:nth-child(2) { inset:auto 0 0 auto; background:radial-gradient(circle,#b9996c,transparent 65%); }
+  .hero-atmosphere > .cursor-light { inset:0 auto auto 0; inline-size:38rem; background:radial-gradient(circle,#cf8f96,transparent 65%); opacity:0; transform:translate(-50%,-50%); transition:opacity .6s var(--ease); }
+  [data-theme='dark'] .hero-atmosphere > span { opacity:.2; }
+  [data-theme='dark'] .hero-atmosphere > .cursor-light { opacity:0; }
+  .hero-atmosphere.is-active > .cursor-light { opacity:.45; }
+  [data-theme='dark'] .hero-atmosphere.is-active > .cursor-light { opacity:.32; }
   .showcase-caption { display:flex; align-items:center; justify-content:space-between; gap:var(--s8); padding:var(--s4) var(--s4) var(--s16); color:var(--muted); }
   .demo-label { border: 1px solid var(--line); padding: var(--s4) var(--s8); border-radius: 999px; font-size:.75rem; line-height:1rem; }
   .lamp-stage { position:relative; isolation:isolate; aspect-ratio: 1.25; border-radius: 8px; background: var(--stage); display:grid; place-items:center; overflow:clip; }
@@ -268,6 +280,9 @@
   .lamp-image { transition:filter .6s var(--ease); }
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior:smooth; }
+    .hero-atmosphere > span:first-child { animation:ambient-arrive 3s var(--ease) both; }
+    .hero-atmosphere > span:nth-child(2) { animation:ambient-arrive 3.8s var(--ease) both; }
+    @keyframes ambient-arrive { from { opacity:0; transform:scale(.8) translateY(32px); } }
     ::view-transition-old(root) { animation:theme-out .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-new(root) { animation:theme-in .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-group(root) { animation-duration:.65s; }

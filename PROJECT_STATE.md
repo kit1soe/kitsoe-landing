@@ -1,7 +1,14 @@
 # Project state
 
 Updated: 2026-11-17 (Asia/Yekaterinburg).
-Stage: complete local website delivery. No deployment.
+Stage: new user-requested interactive lighting and motion refinement in progress. No deployment.
+
+## Active work — 17 November, 23:42 Yekaterinburg
+
+- User requests significantly more interaction, attractive lighting, cursor wow effects, transparency and animated background. Visual review is the primary test.
+- Removed previous completion marker and restarted auto resume PID 24024; status active and process verified. Keep it running until this new work is complete.
+- First prototype: hero layered ambient light, translucent showcase and pointer-following glow on fine pointers; initial background appearance animation, reduced-motion handling. Build and type check pass. Mobile first-screen screenshot viewed but effect needs careful desktop visual inspection and more substantive interaction/design work.
+- Next: inspect desktop pointer response/light and dark themes and mobile composition; iterate to achieve a clearly perceptible premium effect; expand the experience beyond the first screen as appropriate; check reduced-motion changes while page is open and no interactions blocked; lint/build and visual review; save checkpoints and commit/push; update memory. Do not mark complete yet. Avoid unsolicited infinite animation without pause control.
 
 ## Final status
 

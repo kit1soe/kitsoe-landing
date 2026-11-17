@@ -37,6 +37,21 @@ addEventListener('storage',event => {
 });
 syncTheme();
 
+const lightField=document.querySelector<HTMLElement>('[data-light-field]');
+const atmosphere=lightField?.querySelector<HTMLElement>('.hero-atmosphere');
+const cursorLight=lightField?.querySelector<HTMLElement>('.cursor-light');
+if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches && !reducedMotion.matches) {
+  let frame=0, x=0, y=0;
+  lightField.addEventListener('pointermove',event=>{
+    if(reducedMotion.matches) return;
+    const bounds=atmosphere.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
+    if(!frame) frame=requestAnimationFrame(()=>{cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`; frame=0;});
+    atmosphere.classList.add('is-active');
+  });
+  lightField.addEventListener('pointerleave',()=>atmosphere.classList.remove('is-active'));
+  reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) atmosphere.classList.remove('is-active');});
+}
+
 const menu=document.querySelector<HTMLDialogElement>('#mobile-menu');
 const toggle=document.querySelector<HTMLButtonElement>('.menu-toggle');
 if(menu && toggle) {
