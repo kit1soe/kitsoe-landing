@@ -15,7 +15,7 @@
 - [x] Add privacy, terms, 404, favicon and SEO metadata.
 - [x] Check all requested viewport widths, keyboard, reduced motion, both themes and form scenarios; directly inspect visual composition and refine it.
 - [x] Run build, types, lint, accessibility and performance checks; fix identified defects. See docs/VISUAL_REVIEW.md for exact scope.
-- [ ] Analyze architecture with Understand Anything (agent tooling only).
-- [ ] Scan Git contents for secrets and push final commits.
+- [x] Analyze architecture with Understand Anything (agent tooling only): 58 nodes, 144 edges, validation clean; local fingerprints saved.
+- [x] Scan Git contents for secrets and push final commits.
 - [x] Leave local site running and document launch, stop and recovery commands.
 - [x] Observe an actual usage-limit reset and successful same-chat auto resume (17 November, 18:02 Yekaterinburg).

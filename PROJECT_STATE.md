@@ -1,7 +1,22 @@
 # Project state
 
 Updated: 2026-11-17 (Asia/Yekaterinburg).
-Stage: burgundy visual refinement implemented; final visual inspection and architecture analysis in progress.
+Stage: complete local website delivery. No deployment.
+
+## Final status
+
+The website, visual refinement, documentation and local architecture analysis are complete. Local preview: http://127.0.0.1:4321. Public source repository: https://github.com/kit1soe/kitsoe-landing. Contacts: src/config/site.ts.
+
+Understand Anything: .ua/knowledge-graph.json, 58 nodes, 144 edges, 6 layers and 9 tour steps. Validation has no issues or warnings; bundled fingerprints baseline covers 46 files. The graph is agent-only and ignored by Git. Source snapshot references 0235237 and file hashes; later completion documentation is outside that snapshot.
+
+Auto resume successfully recovered the same chat after two actual usage resets on 17 November (18:02 and 23:02 Yekaterinburg), one command each. On completed delivery .local/project-complete.json stops the watcher. Further user revisions should start from this completed version. The historical checkpoints below are retained for diagnosis, not pending work.
+
+## Current resume point — 17 November, 23:02 Yekaterinburg
+
+- Auto resume succeeded a second time at 18:02 UTC after backend permission, one sent attempt, same chat. Watcher is active.
+- Website source and documentation pushed through 0235237. Latest check/lint have 0 diagnostics; final subgrid build passed.
+- Visual CUA work COMPLETE: desktop hero in both themes, mobile page including FAQ/form, widths 360/390/430/768/1024/1440/1920 inspected during refinement. Final card alignment verified on 768. No console errors observed. Fictional form fields cleared by reload; no message sent. Browser viewport reset and preview tab marked deliverable. Screenshots: .local/visual-final/*.jpg.
+- Only remaining work: architecture agent finishing existing .ua batches (no new website code), inspect its graph validation, final TASKS/state/docs commit and push, write completion marker to stop watcher. Do not restart the visual workflow or repeat successful checks without a new issue.
 
 ## Completed
 
