@@ -2,6 +2,13 @@
 import { Image } from 'astro:assets';
 import glassStudy from '../assets/glass-study.png';
 const tasks = ['Продумать структуру', 'Собрать интерфейс', 'Проверить результат'];
+const bookingDays = [
+  { label: 'Сегодня', times: ['12:30', '15:00', '17:30'] },
+  { label: 'Завтра', times: ['10:00', '11:30', '15:00'] },
+  { label: 'Через 2 дня', times: ['09:30', '13:00', '16:30'] },
+] as const;
+const initialDay = bookingDays[1];
+const initialTime = initialDay.times[1];
 ---
 <section id="experience" class="section wrap" aria-labelledby="experience-title">
   <div class="section-heading" data-reveal>
@@ -35,25 +42,36 @@ const tasks = ['Продумать структуру', 'Собрать инте
   <div class="demo-grid">
     <article class="demo-item" data-reveal>
       <div class="demo-window booking-window" data-booking>
-        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация записи</span><span aria-hidden="true">↗</span></div>
+        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация записи</span></div>
         <div class="booking-brand"><span class="booking-mark" aria-hidden="true">f.</span><div><h3 class="heading-5">Время для себя</h3><p class="caption-2 muted">Консультация · 30 минут</p></div></div>
-        <div class="booking-days" role="group" aria-label="День для демонстрационной записи">
-          <button type="button" class="choice-button" data-day="Сегодня" aria-pressed="false" disabled>Сегодня</button>
-          <button type="button" class="choice-button" data-day="Завтра" aria-pressed="true" disabled>Завтра</button>
-          <button type="button" class="choice-button" data-day="Через 2 дня" aria-pressed="false" disabled>Через 2 дня</button>
+        <fieldset>
+          <legend class="visually-hidden">День для демонстрационной записи</legend>
+          <div class="booking-days">
+            {bookingDays.map((day, i) => <label class="booking-choice" for={`booking-day-${i}`}>
+              <input class="visually-hidden" id={`booking-day-${i}`} type="radio" name="booking-day" value={day.label} data-times={day.times.join(',')} checked={day === initialDay} autocomplete="off" disabled />
+              <span class="caption-2">{day.label}</span>
+            </label>)}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="booking-slot-legend caption-2 muted">Выберите удобное время</legend>
+          <div class="booking-slots">
+            {initialDay.times.map((time, i) => <label class="booking-choice" for={`booking-time-${i}`}>
+              <input class="visually-hidden" id={`booking-time-${i}`} type="radio" name="booking-time" value={time} checked={time === initialTime} autocomplete="off" disabled />
+              <span class="caption-2" data-time-label>{time}</span>
+            </label>)}
+          </div>
+        </fieldset>
+        <div class="demo-result caption-2">
+          <p role="status" data-booking-selection>Выбрано: {initialDay.label.toLowerCase()}, {initialTime}.</p>
+          <p class="caption-5">Демонстрация. Запись не создаётся.</p>
         </div>
-        <div><p class="caption-2 muted" style="margin-block-end: var(--s8)">Выберите удобное время</p><div class="booking-slots" role="group" aria-label="Время для демонстрационной записи">
-          <button type="button" class="choice-button" data-slot="10:00" aria-pressed="false" disabled>10:00</button>
-          <button type="button" class="choice-button" data-slot="11:30" aria-pressed="true" disabled>11:30</button>
-          <button type="button" class="choice-button" data-slot="15:00" aria-pressed="false" disabled>15:00</button>
-        </div></div>
-        <p class="demo-result caption-2" role="status" data-booking-result><span data-booking-selection>Выбрано: завтра, 11:30.</span><br /><span class="caption-5">Это пример интерфейса. Запись не создаётся.</span></p>
       </div>
       <div class="demo-description"><span class="demo-number caption-4">01</span><div><h3 class="heading-6">Запись без лишних шагов</h3><p class="body-6">Для услуг, консультаций и встреч. Понятный выбор и мгновенная обратная связь.</p></div></div>
     </article>
     <article class="demo-item" data-reveal>
       <div class="demo-window task-window" data-tasks>
-        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация приложения</span><span aria-hidden="true">↗</span></div>
+        <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация приложения</span></div>
         <div class="task-heading"><div><p class="caption-2 muted">Рабочее пространство</p><h3 class="heading-5">От идеи к результату</h3></div><span class="demo-label">Ваш план</span></div>
         <div class="task-checks">{tasks.map((task, i) => <label for={`demo-task-${i}`}><input id={`demo-task-${i}`} type="checkbox" name={`demo-task-${i}`} checked={i === 0} disabled /><span class="body-6">{task}</span></label>)}</div>
         <div><div class="progress-label caption-2"><label for="demo-progress">Готовность</label><output data-progress-text aria-live="polite">1 из 3</output></div><progress id="demo-progress" max="3" value="1">1 из 3</progress></div>

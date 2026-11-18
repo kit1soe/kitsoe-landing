@@ -282,11 +282,14 @@
   .booking-brand { display:flex; flex-wrap:wrap; align-items:center; gap:var(--s12); }
   .booking-brand > div { flex:1 1 8rem; min-inline-size:0; }
   .booking-mark { flex:0 0 48px; inline-size:48px; block-size:48px; border:1px solid var(--accent); border-radius:50%; display:grid; place-items:center; color:var(--accent); font-size:1.5rem; line-height:2rem; }
-  .booking-days { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s8); }
-  .choice-button { min-block-size:48px; padding:var(--s8) var(--s12); background:transparent; border:1px solid var(--line); border-radius:8px; font-size:.875rem; line-height:1.25rem; }
-  .choice-button[aria-pressed='true'] { border-color:var(--accent); background:var(--accent-soft); color:var(--text); }
-  .booking-slots { display:flex; gap:var(--s8); flex-wrap:wrap; }
-  .booking-slots button { flex:1; }
+  .booking-days,.booking-slots { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,4rem),1fr)); gap:var(--s8); }
+  .booking-slot-legend { margin-block-end:var(--s8); }
+  .booking-choice { position:relative; display:grid; min-inline-size:0; }
+  .booking-choice span { box-sizing:border-box; display:grid; place-items:center; min-block-size:48px; padding:var(--s8); border:1px solid var(--line); border-radius:8px; text-align:center; text-wrap:balance; cursor:pointer; }
+  .booking-choice input:checked + span { border-color:var(--accent); background:var(--accent-soft); color:var(--text); text-decoration:underline; text-underline-offset:4px; }
+  .booking-choice input:focus-visible + span { outline:2px solid var(--accent); outline-offset:2px; }
+  .booking-choice input:disabled + span { cursor:default; }
+  .booking-choice:hover input:not(:disabled) + span { border-color:var(--accent); }
   .demo-result { color:var(--muted); padding:var(--s12) var(--s16); border-radius:8px; background:var(--bg); margin-block-start:auto; min-block-size:64px; }
   .task-window { --surface-subtle:#183b33; --surface:#254c42; --text:#f3f3e9; --muted:#b8cec5; --line:#638477; --accent:#c4dec8; color-scheme:dark; color:var(--text); accent-color:var(--accent); background:var(--surface-subtle); }
   .task-heading { display:flex; flex-wrap:wrap; justify-content:space-between; gap:var(--s16); align-items:center; }
@@ -376,7 +379,8 @@
     [data-palette='forest'] .lab-orbit span:first-child { transform:scale(.85) translateX(12%); }
     [data-palette='stone'] .lab-orbit span:nth-child(2) { transform:scale(1.2) translateY(-8%); }
     .task-window progress::-webkit-progress-value { transition:width .5s var(--ease); }
-    .choice-button[aria-pressed='true'] { animation:choice-in .35s var(--ease); }
+    .booking-choice input:checked + span { animation:choice-in .35s var(--ease); }
+    .booking-choice:active input:not(:disabled) + span { transform:scale(.98); }
     .faq-icon { transition:transform .45s var(--ease); }
     .faq-list details { interpolate-size:allow-keywords; }
     @supports (interpolate-size:allow-keywords) and selector(details::details-content) {
@@ -448,8 +452,6 @@
     .section-heading > p { max-inline-size:520px; }
     .demo-grid { grid-template-columns:1fr 1fr; gap:var(--s16); }
     .demo-window { padding:var(--s16); gap:var(--s16); min-block-size:440px; }
-    .booking-days { grid-template-columns:1fr; gap:var(--s4); }
-    .choice-button { min-block-size:40px; }
     .service-row { grid-template-columns:32px minmax(0,1fr) 32px; gap:var(--s16); }
     .service-row h3 { min-inline-size:0; overflow-wrap:break-word; }
     .service-row > div:last-of-type { grid-column:2; }
@@ -495,8 +497,6 @@
     .qualities p { font-size:.875rem; line-height:1.25rem; gap:var(--s16); }
     .demo-grid { grid-template-columns:minmax(0,1fr); gap:var(--s40); }
     .demo-window { min-inline-size:0; min-block-size:400px; padding:min(var(--s24),24px); gap:var(--s24); }
-    .booking-days { grid-template-columns:repeat(auto-fit,minmax(min(100%,4rem),1fr)); gap:var(--s8); }
-    .choice-button { padding:var(--s8); min-block-size:48px; }
     .manifesto { padding-block:var(--s64); }
     .service-row { padding-block:var(--s32); }
     .service-row > div:last-of-type { grid-column:1 / -1; }

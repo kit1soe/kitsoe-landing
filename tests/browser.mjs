@@ -160,8 +160,16 @@ try {
       assert.equal(await page.locator('[data-lamp]').getAttribute('data-surface'), 'graphite');
       await page.locator('#brightness').focus(); await page.keyboard.press('ArrowRight');
       assert.equal(await page.locator('#brightness-value').textContent(), '71%');
-      await page.locator('[data-day="Сегодня"]').click(); await page.locator('[data-slot="15:00"]').click();
-      assert.match(await page.locator('[data-booking-result]').textContent(), /сегодня, 15:00/);
+      const booking = page.locator('[data-booking]');
+      await booking.getByRole('radio', { name: 'Завтра', exact: true }).press('ArrowRight');
+      assert.equal(await booking.getByRole('radio', { name: 'Через 2 дня' }).isChecked(), true);
+      assert.equal(await booking.getByRole('radio', { name: '11:30' }).count(), 0);
+      assert.equal(await booking.locator('[name="booking-time"]:checked').count(), 0);
+      assert.match(await booking.getByRole('status').textContent(), /Выберите время/);
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await booking.getByRole('radio', { name: '13:00' }).isChecked(), true);
+      assert.match(await booking.getByRole('status').textContent(), /через 2 дня, 13:00/);
       await page.locator('[data-tasks] input').nth(1).check(); await page.locator('[data-tasks] input').nth(2).check();
       assert.equal(await page.locator('#demo-progress').getAttribute('value'), '3');
       const summary = page.locator('.faq-list summary').first();

@@ -141,14 +141,34 @@ styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-tone"]').forEach(i
   input.addEventListener('change',()=>{styleLab.dataset.tone=input.value;});
 });
 if(booking) {
-  booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=> {button.disabled=false;});
-  booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=>button.addEventListener('click',()=>{
-    const group=button.hasAttribute('data-day')?'data-day':'data-slot';
-    booking.querySelectorAll(`[${group}]`).forEach(peer=>peer.setAttribute('aria-pressed',String(peer===button)));
-    const day=booking.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')!.dataset.day;
-    const slot=booking.querySelector<HTMLElement>('[data-slot][aria-pressed="true"]')!.dataset.slot;
-    booking.querySelector('[data-booking-selection]')!.textContent=`Выбрано: ${day?.toLowerCase()}, ${slot}.`;
-  }));
+  const days = Array.from(booking.querySelectorAll<HTMLInputElement>('[name="booking-day"]'));
+  const times = booking.querySelectorAll<HTMLInputElement>('[name="booking-time"]');
+  const status = booking.querySelector<HTMLElement>('[data-booking-selection]');
+
+  if (status) {
+    days.forEach(day => {
+      day.disabled = false;
+      day.addEventListener('change', () => {
+        const available = day.dataset.times?.split(',') ?? [];
+        times.forEach((time, i) => {
+          const value = available[i] ?? '';
+          time.checked = false;
+          time.value = value;
+          time.disabled = !value;
+          const label = time.labels?.[0]?.querySelector('[data-time-label]');
+          if (label) label.textContent = value;
+        });
+        status.textContent = `День: ${day.value.toLowerCase()}. Выберите время.`;
+      });
+    });
+    times.forEach(time => {
+      time.disabled = false;
+      time.addEventListener('change', () => {
+        const day = days.find(option => option.checked);
+        if (day) status.textContent = `Выбрано: ${day.value.toLowerCase()}, ${time.value}.`;
+      });
+    });
+  }
 }
 const tasks=document.querySelector<HTMLElement>('[data-tasks]');
 tasks?.querySelectorAll<HTMLInputElement>('input').forEach(input=> {input.disabled=false;});
