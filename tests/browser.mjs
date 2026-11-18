@@ -166,6 +166,8 @@ try {
       await page.getByRole('button',{name:'Остановить движение'}).click();
       assert.equal(await preview.evaluate(el=>el.style.getPropertyValue('--depth-x')), '');
       assert.equal(await preview.evaluate(el=>el.classList.contains('is-lit')), false);
+      assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
+      assert.equal(await page.locator('.contact').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
     } finally { await context.close(); }
   });
   await run('service link suggests a project type without overwriting a visitor choice', async () => {
