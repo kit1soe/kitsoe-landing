@@ -1,9 +1,11 @@
 # Project state
 
-Updated: 2026-11-17 (Asia/Yekaterinburg).
+Updated: 2026-11-18 (Asia/Yekaterinburg).
 Stage: ongoing visual and interaction development requested by owner. No deployment.
 
 ## Active work — renewed request
+
+- Latest checkpoint 18 November 09:13 Yekaterinburg: e5ed589 is pushed and working tree is clean. Pointer geometry reads are batched per animation frame; browser regression, type check, lint and build passed after that change. Directly reviewed dark desktop hero and palette concept again; continue meaningful visual refinement according to the owner’s request. Native watcher PID 8480 is active and verified; it resumes only actual usage-limit failures, not a successfully completed turn. No project-complete marker. Historical completed/next-action sections below are superseded.
 
 - Latest checkpoint 18 November 09:05 Yekaterinburg: source through 7b3c1e6 pushed. Added a live palette concept with responsive translucent sculpture and pointer depth, lighting in services/contact, project-type suggestion from service links without overwriting user selection, process cards, contact surface, coherent social preview (`og-v2.jpg`) and batched reveal measurements. Direct visual review performed on desktop/tablet/mobile in both themes; resolved duplicated screen-reader stage numbers, tablet heading wrap, touch targets. Production Lighthouse run after additions: accessibility/performance/best-practices 1.0 locally; noindex is deliberate; a ~44ms forced reflow remains observed and is not claimed eliminated. Image generation was rate-limited, so sculpture is CSS; do not retry before reset. Current browser regression suite running. Keep the user-requested sustained work active, keep watcher PID8480; no completion marker.
 - 09:09: added gentle cursor depth to lamp; browser regression suite passed including changing reduced-motion preference at runtime, pause/resume and metadata image; check/lint/build pass. Visually inspected mobile form draft with fictional data then reloaded; no message was sent. Real pointer interaction inspected. Latest uncommitted source is lamp response, its tests and docs; commit as next checkpoint. User requested continued work, not a premature completion response.
@@ -16,7 +18,7 @@ Stage: ongoing visual and interaction development requested by owner. No deploym
 - Latest: fe48ba0 committed process cards, and contact form now sits on its own translucent surface. The sculpture shifts subtly with pointer position and resets on exit or pause. Visual review covered light/dark desktop and 390px mobile, color switching, mobile navigation and contact fields. Full browser suite passed after concept/form and before latest pointer depth change; check/lint/build pass after it. Finish checking pointer depth and paused/reduced states, validate latest screenshots and remaining visual details. No completion marker. Continue active work.
 - Further progress: 8cd0882/9de7ace/094601d pushed. Contact panel and ambient light across services/contact; pause verified across effects; Russian copy cleaned. Visual review at 390/768/1024/1440, both themes, interaction and keyboard; adjusted 768 heading. Fixed duplicate spoken stage numbers observed in CUA by marking decorative numbers aria-hidden. Browser suite passed after pointer depth and service mapping. Uncommitted: tablet typography, accessible decorative numbers and pause regression check. Continue visual review and implementation; no completion marker while user asks sustained work. Watcher active PID8480.
 
-## 18 November — current result
+## Historical checkpoint — earlier 18 November iteration (superseded)
 
 - Previous auto resume did not fire because the assistant explicitly ended its turn successfully while work remained. The watcher intentionally handles confirmed usage-limit failures, not successful completed turns. Do not present it as a general continuation mechanism.
 - Added drifting ambient lighting with pause control, translucent hero surface, pointer-following light on hero and demo cards. Motion is optional and reduced-motion changes are respected while the page is open. Visual inspection: desktop light/dark, real pointer movement over card, mobile 390 and pause/resume.
@@ -31,7 +33,7 @@ Stage: ongoing visual and interaction development requested by owner. No deploym
 - Next: inspect desktop pointer response/light and dark themes and mobile composition; iterate to achieve a clearly perceptible premium effect; expand the experience beyond the first screen as appropriate; check reduced-motion changes while page is open and no interactions blocked; lint/build and visual review; save checkpoints and commit/push; update memory. Do not mark complete yet. Avoid unsolicited infinite animation without pause control.
 - Update 23:44: old preview server had stopped, restarted as exec session 76483. Fresh visual inspection revealed horizontal overflow from negative inset; fixed. Ambient light now drifts continuously with a visible pause/resume control, and pausing disables pointer light; reduced motion disables movement. Verified light desktop screenshot, dark theme and pause label, but actual pointer interaction, mobile with new control, functional regression and broader visual effects remain. Commits 07aaf03 and b1ab62f pushed. Continue from here, not complete. Auto resume remains active.
 
-## Final status
+## Historical completed status — superseded by active work above
 
 The website, visual refinement, documentation and local architecture analysis are complete. Local preview: http://127.0.0.1:4321. Public source repository: https://github.com/kit1soe/kitsoe-landing. Contacts: src/config/site.ts.
 
@@ -39,7 +41,7 @@ Understand Anything: .ua/knowledge-graph.json, 58 nodes, 144 edges, 6 layers and
 
 Auto resume successfully recovered the same chat after two actual usage resets on 17 November (18:02 and 23:02 Yekaterinburg), one command each. On completed delivery .local/project-complete.json stops the watcher. Further user revisions should start from this completed version. The historical checkpoints below are retained for diagnosis, not pending work.
 
-## Current resume point — 17 November, 23:02 Yekaterinburg
+## Historical resume point — 17 November, 23:02 Yekaterinburg
 
 - Auto resume succeeded a second time at 18:02 UTC after backend permission, one sent attempt, same chat. Watcher is active.
 - Website source and documentation pushed through 0235237. Latest check/lint have 0 diagnostics; final subgrid build passed.
@@ -74,7 +76,7 @@ Auto resume successfully recovered the same chat after two actual usage resets o
 - Architecture subagent pipeline hit same usage limit; resumed existing architecture agent after actual reset. .ua has scan/batches/extracted structure. Await graph completion.
 - Finish visual comparison across widths, docs/README, final focused commit/push, memory. Preserve no deployment. Do not create completion marker before remaining work is done.
 
-## Next action
+## Historical next action (superseded)
 
 Latest user clarification: by testing they primarily mean HOW THE PAGE LOOKS. Prioritize direct visual review, composition, typography, spacing, motion and polish across screens; do not substitute automated pass counts for design review.
 
