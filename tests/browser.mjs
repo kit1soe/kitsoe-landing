@@ -169,6 +169,15 @@ try {
       assert.equal(await group.getAttribute('data-tone'), 'dark');
     } finally { await context.close(); }
   });
+  await run('style concept labels remain separate at 320px', async () => {
+    const { page, context } = await newPage({ viewport: { width: 320, height: 800 }, reducedMotion: 'reduce' });
+    try {
+      const action = await page.locator('.lab-preview-action').boundingBox();
+      const index = await page.locator('.lab-preview-index').boundingBox();
+      assert.ok(action && index);
+      assert.ok(index.y + index.height <= action.y || action.y + action.height <= index.y || index.x + index.width <= action.x || action.x + action.width <= index.x, 'concept labels must not overlap');
+    } finally { await context.close(); }
+  });
   await run('pointer depth stops when motion is paused', async () => {
     const { page, context } = await newPage({reducedMotion:'no-preference'});
     try {

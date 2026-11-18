@@ -1,10 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+import glassStudy from '../assets/glass-study.png';
 const tasks = ['Продумать структуру', 'Собрать интерфейс', 'Проверить результат'];
 ---
 <section id="experience" class="section wrap" aria-labelledby="experience-title">
   <div class="section-heading" data-reveal>
     <div><p class="eyebrow">01 / Возможности</p><h2 id="experience-title" class="heading-2">Не просто посмотреть.<br />Попробовать.</h2></div>
-    <p class="body-3">Хороший интерфейс чувствуется в действии. Выберите время или соберите небольшой план. Всё работает прямо здесь.</p>
+    <p class="body-3">Хороший интерфейс чувствуется в действии. Измените оформление, выберите время или соберите небольшой план.</p>
   </div>
   <article class="style-lab" data-reveal data-style-lab data-palette="wine" data-tone="dark">
     <div class="style-lab-copy">
@@ -25,7 +27,7 @@ const tasks = ['Продумать структуру', 'Собрать инте
     <div class="lab-preview" aria-label="Пример страницы с выбранным оформлением">
       <div class="lab-preview-top"><span class="lab-monogram">a.</span><span>АТЕЛЬЕ ФОРМЫ</span><span>КОНЦЕПТ</span></div>
       <div class="lab-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="lab-sculpture" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="lab-sculpture" aria-hidden="true"><Image src={glassStudy} alt="" widths={[320, 640]} sizes="(max-width: 600px) 60vw, 320px" format="webp" loading="lazy" /></div>
       <div class="lab-preview-bottom"><p class="caption-5">ПРОСТРАНСТВО ДЛЯ ИДЕЙ</p><p class="heading-4">Создавать<br />с ощущением.</p><span class="lab-preview-action">Концепция интерфейса</span></div>
       <span class="lab-preview-index caption-5" data-lab-index aria-hidden="true">01 / 03</span>
     </div>
