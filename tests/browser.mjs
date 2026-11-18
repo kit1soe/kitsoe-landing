@@ -154,6 +154,16 @@ try {
       assert.equal(await group.getAttribute('data-palette'), 'stone');
     } finally { await context.close(); }
   });
+  await run('service link suggests a project type without overwriting a visitor choice', async () => {
+    const { page, context } = await newPage();
+    try {
+      await page.getByRole('link', {name:'Обсудить проект: Лендинги'}).click();
+      assert.equal(await page.locator('#inquiry-project').inputValue(), 'Лендинг');
+      await page.locator('#inquiry-project').selectOption('Доработка сайта');
+      await page.getByRole('link', {name:'Обсудить проект: Сайты для бизнеса'}).click();
+      assert.equal(await page.locator('#inquiry-project').inputValue(), 'Доработка сайта');
+    } finally { await context.close(); }
+  });
   await run('normal motion reveals once; reduced motion exposes final text', async () => {
     const { page, context } = await newPage({ reducedMotion: 'no-preference' });
     try {

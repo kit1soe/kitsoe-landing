@@ -11,6 +11,14 @@ if (form) {
   const prepare = document.querySelector<HTMLButtonElement>('#prepare-inquiry')!;
   const copyStatus = document.querySelector<HTMLElement>('#copy-status')!;
   const touched = new WeakSet<Element>();
+  const projectField = form.querySelector<HTMLSelectElement>('#inquiry-project')!;
+  document.querySelectorAll<HTMLAnchorElement>('.service-arrow[data-project]').forEach(link=>link.addEventListener('click',()=>{
+    const selected=link.dataset.project;
+    if(!projectField.value && selected && [...projectField.options].some(option=>option.value===selected)) {
+      projectField.value=selected;
+      showFieldError(projectField,undefined);
+    }
+  }));
   let submitted = false;
   let announcement: ReturnType<typeof setTimeout> | undefined;
   function readForm(): Inquiry {
