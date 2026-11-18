@@ -11,5 +11,5 @@ const faqs = [
 ---
 <section id="faq" class="section wrap faq-layout" aria-labelledby="faq-title">
   <div class="faq-intro" data-reveal><p class="eyebrow">04 / Вопросы</p><h2 id="faq-title" class="heading-2">Несколько<br />важных деталей.</h2><p class="body-3 muted">Если вашего вопроса здесь нет, обсудим его лично.</p><a class="text-link body-6" href="#contact">Обсудить проект <span aria-hidden="true">↗</span></a></div>
-  <div class="faq-list" data-reveal>{faqs.map(([question,answer]) => <details><summary>{question}</summary><p class="body-3">{answer}</p></details>)}</div>
+  <div class="faq-list" data-reveal>{faqs.map(([question,answer]) => <details><summary>{question}<span class="faq-icon" aria-hidden="true">+</span></summary><p class="body-3">{answer}</p></details>)}</div>
 </section>
