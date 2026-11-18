@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
+import { site } from '../src/config/site.ts';
 
 const base = process.env.TEST_URL || 'http://127.0.0.1:4321';
 const artifacts = '.local/browser';
@@ -64,14 +65,14 @@ try {
       assert.equal(await page.locator('#inquiry-draft').isVisible(), true);
       assert.equal(await page.locator('#draft-title').evaluate(el => el === document.activeElement), true);
       const telegram = new URL(await page.locator('#draft-open').getAttribute('href'));
-      assert.equal(telegram.href.startsWith('https://t.me/kitsoe?text='), true);
+      assert.equal(telegram.origin + telegram.pathname, `https://t.me/${site.telegram}`);
       assert.equal(telegram.searchParams.get('text'), await page.locator('#draft-text').inputValue());
       await page.locator('#channel-email').check();
       assert.equal(await page.locator('#inquiry-draft').isVisible(), false);
       await page.locator('#prepare-inquiry').click();
       const mail = new URL(await page.locator('#draft-open').getAttribute('href'));
       assert.equal(mail.protocol, 'mailto:');
-      assert.equal(mail.pathname, 'pimakarima@gmail.com');
+      assert.equal(mail.pathname, site.email);
       assert.equal(mail.searchParams.get('body'), await page.locator('#draft-text').inputValue());
       await page.locator('#inquiry-name').fill('Анна Мария');
       assert.equal(await page.locator('#inquiry-draft').isVisible(), false);
@@ -265,7 +266,7 @@ try {
     try {
       assert.equal(await page.locator('h1').isVisible(), true);
       assert.equal(await page.locator('.theme-toggle').isVisible(), false);
-      assert.equal(await page.locator('a[href="https://t.me/kitsoe"]').first().isVisible(), true);
+      assert.equal(await page.locator(`a[href="https://t.me/${site.telegram}"]`).first().isVisible(), true);
       assert.equal(await page.locator('#prepare-inquiry').isDisabled(), true);
     } finally { await context.close(); }
     const forced = await newPage({ forcedColors: 'active' });

@@ -22,7 +22,7 @@ npm run preview -- --port 4322
 
 ## Изменение сайта
 
-- Контакты, бренд и метаданные: `src/config/site.ts`.
+- Контакты и основные метаданные: `src/config/site.ts`. Telegram указывается без `@` и без ссылки; email — полностью. После изменения пересоберите сайт.
 - Тексты секций: `src/components/`; композиция: `src/pages/index.astro`.
 - Палитра, адаптивность и движение: `src/styles/global.css`.
 - Темы и демонстрации: `src/scripts/site.ts`.
