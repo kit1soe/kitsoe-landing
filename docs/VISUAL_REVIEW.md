@@ -8,6 +8,9 @@
 
 ## Modern Web Guidance
 
+- `interactive-content-reveal`: блики не перекрывают элементы и не скрывают содержимое; “pointer-events: none” и полностью доступный основной интерфейс.
+- `motion`: длительное движение можно остановить, при reduced motion оно отключается; “Provide a pause mechanism”.
+
 - `same-document-transitions`: я меняю палитру через startViewTransition с сохранением фокуса и мгновенным запасным вариантом. “The View Transitions API is designed for progressive enhancement.”
 - `motion`: я использую конечные эффекты opacity/transform и учитываю reduced motion. “Keep the final state”.
 - `color`: я сохраняю контраст и текстовые/геометрические признаки состояния. “Don't use color alone”.

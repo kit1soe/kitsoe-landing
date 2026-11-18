@@ -185,7 +185,7 @@
   .hero-atmosphere > span { position:absolute; inline-size:65%; aspect-ratio:1; border-radius:50%; filter:blur(48px); opacity:.32; }
   .hero-atmosphere > span:first-child { inset:0 auto auto 5%; background:radial-gradient(circle,#c39c9c,transparent 65%); }
   .hero-atmosphere > span:nth-child(2) { inset:auto 0 0 auto; background:radial-gradient(circle,#b9996c,transparent 65%); }
-  .atmosphere-toggle { align-items:center; gap:var(--s8); margin-block-start:var(--s24); padding:var(--s8) 0; border:0; background:none; color:var(--muted); font-size:.75rem; line-height:1rem; }
+  .atmosphere-toggle { align-items:center; gap:var(--s8); margin-block-start:var(--s24); padding:var(--s8) 0; min-block-size:48px; border:0; background:none; color:var(--muted); font-size:.75rem; line-height:1rem; }
   .atmosphere-toggle:hover { color:var(--accent); }
   .hero-atmosphere > .cursor-light { inset:0 auto auto 0; inline-size:38rem; background:radial-gradient(circle,#cf8f96,transparent 65%); opacity:0; transform:translate(-50%,-50%); transition:opacity .6s var(--ease); }
   [data-theme='dark'] .hero-atmosphere > span { opacity:.2; }
@@ -222,7 +222,10 @@
   .brightness-control label { display:flex; gap:var(--s16); justify-content:space-between; }
   input[type='range'] { inline-size:100%; min-block-size:32px; margin:0; cursor:ew-resize; }
   .demo-footnote { margin-block-start:var(--s12); padding-inline:var(--s4); color:var(--muted); }
-  .demo-window { border:1px solid var(--line); border-radius:16px; padding:var(--s24); background:var(--surface); min-block-size:420px; display:flex; flex:1; flex-direction:column; gap:var(--s24); }
+  .demo-window { position:relative; isolation:isolate; border:1px solid var(--line); border-radius:16px; padding:var(--s24); background:var(--surface); min-block-size:420px; display:flex; flex:1; flex-direction:column; gap:var(--s24); }
+  .demo-window::before { content:''; position:absolute; z-index:0; inset:0; border-radius:inherit; pointer-events:none; background:radial-gradient(260px circle at var(--light-x, 50%) var(--light-y, 50%), #dba9a72b, transparent 70%); opacity:0; transition:opacity .5s var(--ease); }
+  .demo-window.is-lit::before { opacity:1; }
+  .demo-window > * { position:relative; }
   .window-top { display:flex; justify-content:space-between; gap:var(--s8); align-items:center; color:var(--muted); }
   .window-dots { display:flex; gap:var(--s4); }
   .window-dots i { inline-size:6px; block-size:6px; border-radius:50%; background:var(--line); }
@@ -334,6 +337,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .atmosphere-toggle { display:none !important; }
+    .demo-window::before { display:none; }
     :where(a,button):active { transform:none; }
     ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation:none; }
     .reveal-ready { opacity:1; transform:none; }

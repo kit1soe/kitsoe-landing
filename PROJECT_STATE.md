@@ -1,7 +1,14 @@
 # Project state
 
 Updated: 2026-11-17 (Asia/Yekaterinburg).
-Stage: new user-requested interactive lighting and motion refinement in progress. No deployment.
+Stage: interactive lighting refinement completed. No deployment.
+
+## 18 November — current result
+
+- Previous auto resume did not fire because the assistant explicitly ended its turn successfully while work remained. The watcher intentionally handles confirmed usage-limit failures, not successful completed turns. Do not present it as a general continuation mechanism.
+- Added drifting ambient lighting with pause control, translucent hero surface, pointer-following light on hero and demo cards. Motion is optional and reduced-motion changes are respected while the page is open. Visual inspection: desktop light/dark, real pointer movement over card, mobile 390 and pause/resume.
+- Latest type check, lint and build passed. Browser suite passed widths 360–1920 in both themes, form, themes, menu, demos, reduced motion, keyboard, routes, accessibility and errors. No message sent.
+- This iteration is complete. Website remains local; public repository is source only. Mark completion so auto resume stops; restart it only for a new extended task, and do not finish a turn early while work remains.
 
 ## Active work — 17 November, 23:42 Yekaterinburg
 

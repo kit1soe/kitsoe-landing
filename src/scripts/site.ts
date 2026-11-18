@@ -47,7 +47,7 @@ atmosphereToggle?.addEventListener('click',()=>{
   if(paused) atmosphere?.classList.remove('is-active');
   atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
 });
-if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches && !reducedMotion.matches) {
+if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches) {
   let frame=0, x=0, y=0;
   lightField.addEventListener('pointermove',event=>{
     if(reducedMotion.matches || lightField.dataset.motionPaused==='true') return;
@@ -57,6 +57,22 @@ if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (po
   });
   lightField.addEventListener('pointerleave',()=>atmosphere.classList.remove('is-active'));
   reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) atmosphere.classList.remove('is-active');});
+}
+
+// Decorative reflections do not cover controls or carry information.
+if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  document.querySelectorAll<HTMLElement>('.demo-window').forEach(card=>{
+    let frame=0, x=0, y=0;
+    card.addEventListener('pointermove',event=>{
+      if(reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
+      const bounds=card.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
+      if(!frame) frame=requestAnimationFrame(()=>{card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`); frame=0;});
+      card.classList.add('is-lit');
+    });
+    card.addEventListener('pointerleave',()=>card.classList.remove('is-lit'));
+    reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) card.classList.remove('is-lit');});
+    atmosphereToggle?.addEventListener('click',()=>{if(lightField?.dataset.motionPaused==='true') card.classList.remove('is-lit');});
+  });
 }
 
 const menu=document.querySelector<HTMLDialogElement>('#mobile-menu');
