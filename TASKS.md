@@ -1,5 +1,11 @@
 # Tasks
 
+## Active visual development
+
+- [ ] Expand meaningful interactive demonstrations and visual depth across the whole page.
+- [ ] Inspect and refine actual appearance, pointer effects and motion in both themes at desktop, tablet and phone widths.
+- [ ] Verify accessibility, reduced motion, functionality, build and preserve source history.
+
 - [x] Read full user brief and gather requirements.
 - [x] Install and read landing-page-design and modern-web-guidance.
 - [x] Verify existing Understand Anything and MGI-Mind installations.

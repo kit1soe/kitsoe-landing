@@ -142,6 +142,18 @@ try {
       await page.keyboard.press('Enter'); assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), null);
     } finally { await context.close(); }
   });
+  await run('style concept changes palette with keyboard', async () => {
+    const { page, context } = await newPage();
+    try {
+      const group = page.locator('[data-style-lab]');
+      const forest = page.getByRole('radio', { name: 'Лес', exact: true });
+      await forest.focus(); await page.keyboard.press('Space');
+      assert.equal(await group.getAttribute('data-palette'), 'forest');
+      assert.equal(await forest.isChecked(), true);
+      await page.getByRole('radio', { name: 'Камень', exact: true }).check();
+      assert.equal(await group.getAttribute('data-palette'), 'stone');
+    } finally { await context.close(); }
+  });
   await run('normal motion reveals once; reduced motion exposes final text', async () => {
     const { page, context } = await newPage({ reducedMotion: 'no-preference' });
     try {

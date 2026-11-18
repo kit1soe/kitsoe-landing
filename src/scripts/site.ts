@@ -103,6 +103,11 @@ if(lamp) {
 }
 
 const booking=document.querySelector<HTMLElement>('[data-booking]');
+const styleLab=document.querySelector<HTMLElement>('[data-style-lab]');
+styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-palette"]').forEach(input=>{
+  input.disabled=false;
+  input.addEventListener('change',()=>{styleLab.dataset.palette=input.value;});
+});
 if(booking) {
   booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=> {button.disabled=false;});
   booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=>button.addEventListener('click',()=>{

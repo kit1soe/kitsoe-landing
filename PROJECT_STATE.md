@@ -1,7 +1,14 @@
 # Project state
 
 Updated: 2026-11-17 (Asia/Yekaterinburg).
-Stage: interactive lighting refinement completed. No deployment.
+Stage: ongoing visual and interaction development requested by owner. No deployment.
+
+## Active work — renewed request
+
+- Owner explicitly says prior stopping was premature and asks to continue substantial development. Do not treat previous completion claims as current.
+- Reopened task; removed completion marker; started native recovery watcher PID 8480. Confirm status after startup. Recovery is only for actual usage limit failures; do not end turn prematurely and expect it to restart a successful turn.
+- Current focus: improve visual system and meaningful live interactions beyond existing first-screen lighting. Inspect rendered result in browser and iterate across themes and mobile. Keep contact handoff, no fake proof, no deployment, accessible motion controls and user-supplied visual direction.
+- Existing source checkpoint: 700e5da. Search MGI memory on resume; preserve project state and save focused commits.
 
 ## 18 November — current result
 
