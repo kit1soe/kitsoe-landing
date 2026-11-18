@@ -102,7 +102,11 @@ if(menu && toggle) {
   menu.querySelector('.menu-close')?.addEventListener('click',()=>menu.close());
   menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>menu.close()));
   menu.addEventListener('close',()=> {toggle.setAttribute('aria-expanded','false');menu.returnValue='';});
-  matchMedia('(min-width: 601px)').addEventListener('change',event=> {if(event.matches && menu.open) menu.close();});
+  const header=toggle.closest<HTMLElement>('.site-header');
+  if(header && 'ResizeObserver' in window) new ResizeObserver(()=> {
+    if(menu.open && getComputedStyle(toggle).display==='none') menu.close();
+  }).observe(header);
+  else matchMedia('(min-width: 601px)').addEventListener('change',event=> {if(event.matches && menu.open) menu.close();});
 }
 
 const lamp=document.querySelector<HTMLElement>('[data-lamp]');

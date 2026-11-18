@@ -124,6 +124,32 @@ try {
       assert.equal(new URL(page.url()).hash, '#contact');
     } finally { await context.close(); }
   });
+  await run('larger root text keeps navigation and content usable', async () => {
+    const { page, context } = await newPage({ viewport: { width: 320, height: 800 } });
+    try {
+      assert.equal(await page.locator('meta[name="text-scale"]').getAttribute('content'), 'scale');
+      // A larger browser default font is simulated for layout; this is not browser zoom.
+      await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+      for (const width of [320, 390, 768]) {
+        await page.setViewportSize({ width, height: 900 });
+        const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+        assert.ok(dimensions.scroll <= dimensions.viewport, `Text scaling at ${width}px: ${JSON.stringify(dimensions)}`);
+        const toggle = page.locator('.menu-toggle');
+        assert.equal(await toggle.isVisible(), true);
+        const icon = await toggle.locator('span').first().boundingBox();
+        assert.ok(icon.width >= 16 && icon.height >= 1, 'Menu icon must remain visible');
+        await toggle.click();
+        const menu = page.locator('#mobile-menu');
+        assert.equal(await menu.evaluate(el => el.scrollWidth <= el.clientWidth), true);
+        await page.keyboard.press('Escape');
+        assert.equal(await menu.isVisible(), false);
+      }
+      await page.locator('.menu-toggle').click();
+      await page.setViewportSize({ width: 1920, height: 1000 });
+      await page.waitForFunction(() => !document.querySelector('#mobile-menu').open);
+      assert.equal(await page.locator('.menu-toggle').isVisible(), false);
+    } finally { await context.close(); }
+  });
   await run('demonstrations and FAQ work with keyboard', async () => {
     const { page, context } = await newPage();
     try {
