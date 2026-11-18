@@ -1,9 +1,15 @@
 ---
 import { Image } from 'astro:assets';
 import lamp from '../assets/lamp.png';
+import studioDay from '../assets/studio-day.png';
+import studioNight from '../assets/studio-night.png';
 ---
-<section class="hero wrap" aria-labelledby="hero-title" data-light-field>
-  <div class="hero-atmosphere" aria-hidden="true"><span></span><span></span><span class="cursor-light"></span></div>
+<section class="hero-stage" aria-labelledby="hero-title" data-light-field>
+  <div class="hero-scene" aria-hidden="true">
+    <Image class="studio-day" src={studioDay} alt="" widths={[640, 960, 1440]} sizes="100vw" quality={68} format="webp" decoding="async" fetchpriority="low" />
+    <Image class="studio-night" src={studioNight} alt="" widths={[640, 960, 1440]} sizes="100vw" quality={68} format="webp" decoding="async" fetchpriority="low" />
+  </div>
+  <div class="hero wrap">
   <div class="hero-copy">
     <p class="eyebrow"><span class="status-dot"></span> Независимый разработчик</p>
     <h1 id="hero-title" class="heading-1 hero-title">Сайты, в которых<br class="desktop-break" /> всё на своём месте<span class="accent-dot">.</span></h1>
@@ -32,6 +38,7 @@ import lamp from '../assets/lamp.png';
       <div class="brightness-control"><label for="brightness" class="caption-2">Яркость <output for="brightness" id="brightness-value">70%</output></label><input id="brightness" name="brightness" type="range" min="10" max="100" value="70" step="1" /></div>
     </div>
     <p class="demo-footnote caption-5">Пример карточки для вашего сайта. Предмет не продаётся.</p>
+  </div>
   </div>
 </section>
 <div class="qualities wrap">

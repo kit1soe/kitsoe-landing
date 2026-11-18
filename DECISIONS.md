@@ -31,3 +31,9 @@
 
 - Booking uses local sample schedules. Changing day updates times and clears the previous selection. Native radio groups provide keyboard operation and a visible result announces the change.
 - Keep Edge as the default verification browser. Firefox and Playwright WebKit provide additional engine coverage on Windows, with separate local reports. Mobile viewport checks do not stand in for physical iOS or Android testing.
+
+## 2026-11-18 — Studio redesign
+
+- The owner asked for a full visual scene, translucent material, viewport-wide lighting and richer motion. Gradients are decorative lighting layers across the page; text and controls sit on steady surfaces. Use separate original studio art for day and night instead of tinting the same scene.
+- The old page snapshot stays opaque while the new one fades in. Unsupported view transitions and reduced motion apply the palette directly. Lamp brightness controls the glow opacity and material exposure separately.
+- The shape in the concept is procedural WebGL, served in a chunk when the section is near. It stops drawing off screen and leaves the static illustration when WebGL is unavailable. The angle range and layer toggle are native controls usable without drag.

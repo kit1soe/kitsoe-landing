@@ -213,14 +213,62 @@ try {
       assert.equal(await group.getAttribute('data-tone'), 'dark');
     } finally { await context.close(); }
   });
-  await run('style concept labels remain separate at 320px', async () => {
+  await run('style concept fits artwork and controls at 320px', async () => {
     const { page, context } = await newPage({ viewport: { width: 320, height: 800 }, reducedMotion: 'reduce' });
     try {
-      const action = await page.locator('.lab-preview-action').boundingBox();
-      const index = await page.locator('.lab-preview-index').boundingBox();
-      assert.ok(action && index);
-      assert.ok(index.y + index.height <= action.y || action.y + action.height <= index.y || index.x + index.width <= action.x || action.x + action.width <= index.x, 'concept labels must not overlap');
+      const stage = page.locator('[data-sculpture-stage]');
+      await stage.scrollIntoViewIfNeeded();
+      const artwork = await stage.boundingBox();
+      const title = await page.locator('.lab-preview-bottom').boundingBox();
+      const settings = await page.locator('.style-lab-settings').boundingBox();
+      assert.ok(artwork && title && settings);
+      assert.ok(artwork.y + artwork.height <= title.y && title.y + title.height <= settings.y, 'art, caption and palette controls stay in reading order');
+      assert.equal(await page.locator('.lab-preview').evaluate(el => el.scrollWidth > el.clientWidth + 1), false);
     } finally { await context.close(); }
+  });
+  await run('sculpture rotates and separates layers, with an image fallback', async () => {
+    const { page, context } = await newPage();
+    try {
+      const stage = page.locator('[data-sculpture-stage]');
+      await stage.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => document.querySelector('[data-sculpture-stage]').dataset.rendering);
+      const slider = page.getByRole('slider', { name: 'Ракурс' });
+      const canvas = stage.locator('canvas');
+      const rendering = await stage.getAttribute('data-rendering');
+      console.log(`  Sculpture renderer: ${rendering}`);
+      if (rendering === 'live') {
+        const before = await canvas.screenshot();
+        await slider.press('End');
+        assert.equal(await slider.inputValue(), '180');
+        assert.equal(await slider.getAttribute('aria-valuetext'), '180°');
+        const turned = await canvas.screenshot();
+        assert.notDeepEqual(turned, before, 'Changing angle changes the rendered pixels');
+        const layers = page.getByRole('button', { name: 'Разнести слои' });
+        await layers.press('Space');
+        assert.equal(await layers.getAttribute('aria-pressed'), 'true');
+        assert.notDeepEqual(await canvas.screenshot(), turned, 'Separating rings changes the rendered pixels');
+      } else {
+        assert.equal(await canvas.isVisible(), false);
+        assert.equal(await stage.locator('img').isVisible(), true);
+        assert.equal(await slider.isVisible(), false);
+      }
+    } finally { await context.close(); }
+    const fallback = await browser.newContext({ reducedMotion: 'reduce' });
+    try {
+      const fallbackPage = await fallback.newPage();
+      await fallbackPage.addInitScript(() => {
+        const getContext = window.HTMLCanvasElement.prototype.getContext;
+        window.HTMLCanvasElement.prototype.getContext = function (type, ...options) {
+          return type === 'webgl' ? null : getContext.call(this, type, ...options);
+        };
+      });
+      await fallbackPage.goto(`${base}/#experience`);
+      const stage = fallbackPage.locator('[data-sculpture-stage]');
+      await stage.scrollIntoViewIfNeeded();
+      await stage.locator('img').waitFor();
+      await fallbackPage.waitForFunction(() => document.querySelector('[data-sculpture-stage]').dataset.rendering === 'image');
+      assert.equal(await fallbackPage.getByRole('slider', { name: 'Ракурс' }).count(), 0);
+    } finally { await fallback.close(); }
   });
   await run('pointer depth stops when motion is paused', async () => {
     const { page, context } = await newPage({reducedMotion:'no-preference'});
@@ -240,6 +288,13 @@ try {
       await page.getByRole('button',{name:'Остановить движение'}).click();
       assert.equal(await hero.evaluate(el=>el.style.getPropertyValue('--hero-depth-x')), '');
       await page.getByRole('button',{name:'Включить движение'}).click();
+      const field = page.locator('[data-page-light]');
+      const cursor = field.locator('.page-light-cursor');
+      const heroPosition = await cursor.evaluate(el => el.style.translate);
+      await page.locator('#faq').scrollIntoViewIfNeeded();
+      await page.mouse.move(23, 432);
+      await page.waitForFunction(previous => document.querySelector('.page-light-cursor').style.translate !== previous, heroPosition);
+      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), true, 'Outside any demo the page light still follows the pointer');
       const preview=page.locator('.lab-preview');
       await preview.scrollIntoViewIfNeeded();
       const box=await preview.boundingBox();
@@ -249,6 +304,7 @@ try {
       await page.getByRole('button',{name:'Остановить движение'}).click();
       assert.equal(await preview.evaluate(el=>el.style.getPropertyValue('--depth-x')), '');
       assert.equal(await preview.evaluate(el=>el.classList.contains('is-lit')), false);
+      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), false);
       assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
       assert.equal(await page.locator('.contact').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
     } finally { await context.close(); }

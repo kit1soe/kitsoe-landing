@@ -19,7 +19,27 @@ const initialTime = initialDay.times[1];
     <div class="style-lab-copy">
       <p class="eyebrow">Интерактивный концепт</p>
       <h3 class="heading-3">Одна идея.<br />Разное настроение.</h3>
-      <p class="body-3">Меняйте цвет и оформление, чтобы увидеть, как одна идея приобретает разный характер.</p>
+      <p class="body-3">Поменяйте палитру и сравните, как цвет, свет и материал меняют восприятие формы.</p>
+    </div>
+    <div class="lab-preview" role="group" aria-label="Пример страницы с выбранным оформлением">
+      <div class="lab-preview-top"><span class="lab-monogram">a.</span><span>АТЕЛЬЕ ФОРМЫ</span><span>КОНЦЕПТ</span></div>
+      <div class="lab-stage" data-sculpture-stage>
+        <div class="lab-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="lab-sculpture" aria-hidden="true">
+          <Image src={glassStudy} alt="" widths={[320, 480, 640]} sizes="(max-width: 600px) 66vw, 340px" format="webp" loading="lazy" />
+          <canvas data-sculpture width="480" height="360"></canvas>
+        </div>
+      </div>
+      <div class="lab-preview-bottom">
+        <p class="caption-5" data-scene-hint>Исследование формы</p>
+        <p class="heading-4">Стекло и свет</p>
+      </div>
+      <div class="lab-scene-controls" data-scene-controls hidden>
+        <div><label class="caption-2" for="lab-angle">Ракурс</label><input id="lab-angle" type="range" min="-180" max="180" step="5" value="0" /></div>
+        <button class="caption-2" type="button" aria-pressed="false" data-scene-layers>Разнести слои</button>
+      </div>
+    </div>
+    <div class="style-lab-settings">
       <fieldset class="lab-options"><legend class="caption-2">Выберите настроение</legend><div>
         <label for="lab-wine"><input id="lab-wine" type="radio" name="lab-palette" value="wine" checked disabled /><span>Бордо</span></label>
         <label for="lab-forest"><input id="lab-forest" type="radio" name="lab-palette" value="forest" disabled /><span>Лес</span></label>
@@ -29,14 +49,7 @@ const initialTime = initialDay.times[1];
         <label for="lab-tone-dark"><input id="lab-tone-dark" type="radio" name="lab-tone" value="dark" checked disabled /><span>Тёмное</span></label>
         <label for="lab-tone-light"><input id="lab-tone-light" type="radio" name="lab-tone" value="light" disabled /><span>Светлое</span></label>
       </div></fieldset>
-      <p class="caption-5 lab-disclaimer">Демонстрация оформления. Это не готовый проект и не магазин.</p>
-    </div>
-    <div class="lab-preview" aria-label="Пример страницы с выбранным оформлением">
-      <div class="lab-preview-top"><span class="lab-monogram">a.</span><span>АТЕЛЬЕ ФОРМЫ</span><span>КОНЦЕПТ</span></div>
-      <div class="lab-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="lab-sculpture" aria-hidden="true"><Image src={glassStudy} alt="" widths={[320, 480, 640]} sizes="(max-width: 600px) 36vw, (max-width: 1000px) 40vw, 300px" format="webp" loading="lazy" /></div>
-      <div class="lab-preview-bottom"><p class="caption-5">ПРОСТРАНСТВО ДЛЯ ИДЕЙ</p><p class="heading-4">Создавать<br />с ощущением.</p><span class="lab-preview-action">Концепция интерфейса</span></div>
-      <span class="lab-preview-index caption-5" data-lab-index aria-hidden="true">01 / 03</span>
+      <p class="caption-5 lab-disclaimer">Демонстрация интерфейса.</p>
     </div>
   </article>
   <div class="demo-grid">
@@ -72,9 +85,12 @@ const initialTime = initialDay.times[1];
     <article class="demo-item" data-reveal>
       <div class="demo-window task-window" data-tasks>
         <div class="window-top caption-5"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Демонстрация приложения</span></div>
-        <div class="task-heading"><div><p class="caption-2 muted">Рабочее пространство</p><h3 class="heading-5">От идеи к результату</h3></div><span class="demo-label">Ваш план</span></div>
+        <div class="task-heading"><div><p class="caption-2 muted">Рабочее пространство</p><h3 class="heading-5">От идеи к результату</h3></div></div>
         <div class="task-checks">{tasks.map((task, i) => <label for={`demo-task-${i}`}><input id={`demo-task-${i}`} type="checkbox" name={`demo-task-${i}`} checked={i === 0} disabled /><span class="body-6">{task}</span></label>)}</div>
-        <div><div class="progress-label caption-2"><label for="demo-progress">Готовность</label><output data-progress-text aria-live="polite">1 из 3</output></div><progress id="demo-progress" max="3" value="1">1 из 3</progress></div>
+        <div class="task-progress">
+          <div class="task-ring" aria-hidden="true"><span class="caption-4" data-progress-percent>33%</span></div>
+          <div><label for="demo-progress" class="title-3">Готовность</label><progress id="demo-progress" class="visually-hidden" max="3" value="1" aria-valuetext="1 из 3"></progress><output class="caption-2 muted" data-progress-text aria-live="polite">1 из 3</output></div>
+        </div>
         <p class="caption-5 muted">Отметьте пункты. Это локальная демонстрация.</p>
       </div>
       <div class="demo-description"><span class="demo-number caption-4">02</span><div><h3 class="heading-6">Порядок в повседневных задачах</h3><p class="body-6">Для сервисов и внутренних инструментов. Всё нужное на виду, каждое действие на своём месте.</p></div></div>

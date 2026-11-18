@@ -1,9 +1,17 @@
 # Project state
 
 Updated: 2026-11-18 (Asia/Yekaterinburg).
-Stage: complete for the approved local scope. Source on public GitHub, no website deployment.
+Stage: visual rebuild verified on the local production preview. No website deployment.
 
-## Current handoff — 18 November 19:40 Yekaterinburg
+## Visual rebuild — 18 November, 20:16 Yekaterinburg
+
+- The owner rejected the previous look: the theme switch flashed, pointer light stopped at container edges, and the demos felt like state toggles. Reviewed the short video provided in Downloads. Its strongest examples stage typography and controls inside a full-width image with a distinct atmosphere. The owner's file and sampled frames remain local and are not site assets.
+- Finished full-width day/night cast-glass art direction, independent viewport-wide pointer and ambient lighting, single-overlay theme crossfade, smoother lamp light and procedural WebGL ribbon with static fallback. In the demos, available appointment times animate in and the checklist displays a live progress ring. Contrast in the hero strengthened and the small-screen scene moved before the palette selectors.
+- In-app review of first screen at 390, 768, 1440, 1920 px, both day/night, wide cursor movement outside the content grid, and the live mobile 3D panel. Edge transition screenshots at 0/160/320/480 ms in both directions: old pixels kept opacity 1, brightness at four representative positions moved between source and target without overshoot. QA snapshots in `.local/browser/studio`.
+- Production preview passed 28 scenarios in each of Edge, Firefox and WebKit, including actual WebGL pixel changes and forced image fallback, keyboard, reduced motion and 7 viewports × 2 themes. A subsequent easing-only adjustment was built and checked by frame capture. Check/lint/build and 15 unit tests passed. Final synthetic mobile Lighthouse: performance, accessibility and best practices 100, LCP 1.0 s, TBT 30 ms, CLS 0, 195 KiB total, intentional noindex. No physical device testing or field measurements.
+- Reopened auto resume in this chat with prior completion marker preserved locally. Native watcher PID 21576 handles confirmed usage limits only and stops on the new completion marker after the verified stage is saved.
+
+## Earlier handoff — 18 November 19:40 Yekaterinburg
 
 - Local development site is open at http://127.0.0.1:4321/. Production build preview at http://127.0.0.1:4322/. Public source: https://github.com/kit1soe/kitsoe-landing.
 - The finished visual iteration includes animated light/dark themes, pointer lighting, a lamp card, six independent concept palettes/tones, a booking concept with distinct schedules, and a project checklist. The form prepares a local draft for Telegram or email. Contact settings live in `src/config/site.ts`.

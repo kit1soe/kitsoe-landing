@@ -25,7 +25,7 @@ npm run preview -- --port 4322
 - Контакты и основные метаданные: `src/config/site.ts`. Telegram указывается без `@` и без ссылки; email — полностью. После изменения пересоберите сайт.
 - Тексты секций: `src/components/`; композиция: `src/pages/index.astro`.
 - Палитра, адаптивность и движение: `src/styles/global.css`.
-- Темы и демонстрации: `src/scripts/site.ts`.
+- Темы, освещение и демонстрации: `src/scripts/site.ts`. Геометрия и материалы объёмного концепта: `src/scripts/sculpture.ts`.
 - Форма: `src/components/Contact.astro`, `src/scripts/inquiry.ts`, `src/lib/inquiry.ts`.
 - Карточка для ссылок: `public/og-v2.jpg`; её исходный макет для просмотра — `scripts/social-card-preview.astro` (не является страницей сайта).
 

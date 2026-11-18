@@ -38,35 +38,51 @@ addEventListener('storage',event => {
 syncTheme();
 
 const lightField=document.querySelector<HTMLElement>('[data-light-field]');
-const atmosphere=lightField?.querySelector<HTMLElement>('.hero-atmosphere');
-const cursorLight=lightField?.querySelector<HTMLElement>('.cursor-light');
+const atmosphere=document.querySelector<HTMLElement>('[data-page-light]');
+const cursorLight=atmosphere?.querySelector<HTMLElement>('.page-light-cursor');
 const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere-toggle');
 atmosphereToggle?.addEventListener('click',()=>{
   const paused=lightField?.dataset.motionPaused !== 'true';
   if(lightField) lightField.dataset.motionPaused=String(paused);
-  if(paused) { atmosphere?.classList.remove('is-active'); lightField?.style.removeProperty('--hero-depth-x'); lightField?.style.removeProperty('--hero-depth-y'); }
+  if(atmosphere) atmosphere.dataset.motionPaused=String(paused);
   atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
 });
-if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  let frame=0, clientX=0, clientY=0;
-  lightField.addEventListener('pointermove',event=>{
-    if(reducedMotion.matches || lightField.dataset.motionPaused==='true') return;
-    clientX=event.clientX; clientY=event.clientY;
-    if(!frame) frame=requestAnimationFrame(()=>{
-      if(!reducedMotion.matches && lightField.dataset.motionPaused!=='true') {
-        const bounds=atmosphere.getBoundingClientRect();
-        const x=clientX-bounds.left, y=clientY-bounds.top;
-        cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`;
-        lightField.style.setProperty('--hero-depth-x',`${(x/bounds.width-.5)*12}px`);
-        lightField.style.setProperty('--hero-depth-y',`${(y/bounds.height-.5)*12}px`);
-      }
-      frame=0;
-    });
-    atmosphere.classList.add('is-active');
-  });
-  const clearHeroEffect=()=>{cancelAnimationFrame(frame); frame=0; atmosphere.classList.remove('is-active'); lightField.style.removeProperty('--hero-depth-x'); lightField.style.removeProperty('--hero-depth-y');};
-  lightField.addEventListener('pointerleave',clearHeroEffect);
-  reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) clearHeroEffect();});
+if (lightField && atmosphere && cursorLight) {
+  const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  let frame = 0;
+  let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+  const clear = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    atmosphere.classList.remove('is-active');
+    lightField.style.removeProperty('--hero-depth-x');
+    lightField.style.removeProperty('--hero-depth-y');
+  };
+  const render = () => {
+    currentX += (targetX - currentX) * .18;
+    currentY += (targetY - currentY) * .18;
+    cursorLight.style.translate = `${currentX}px ${currentY}px`;
+    lightField.style.setProperty('--hero-depth-x', `${(currentX / window.innerWidth - .5) * 12}px`);
+    lightField.style.setProperty('--hero-depth-y', `${(currentY / window.innerHeight - .5) * 12}px`);
+    const moving = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) > .5;
+    frame = moving ? requestAnimationFrame(render) : 0;
+  };
+  document.addEventListener('pointermove', event => {
+    if (event.pointerType === 'touch' || !finePointer.matches || reducedMotion.matches || atmosphere.dataset.motionPaused === 'true') return;
+    targetX = event.clientX;
+    targetY = event.clientY;
+    if (!atmosphere.classList.contains('is-active')) {
+      currentX = targetX;
+      currentY = targetY;
+      atmosphere.classList.add('is-active');
+    }
+    if (!frame) frame = requestAnimationFrame(render);
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', clear);
+  window.addEventListener('blur', clear);
+  finePointer.addEventListener('change', () => { if (!finePointer.matches) clear(); });
+  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) clear(); });
+  atmosphereToggle?.addEventListener('click', () => { if (atmosphere.dataset.motionPaused === 'true') clear(); });
 }
 
 // Decorative reflections do not cover controls or carry information.
@@ -74,7 +90,7 @@ if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.querySelectorAll<HTMLElement>('.demo-window, .service-row, .lab-preview').forEach(card=>{
     let frame=0, clientX=0, clientY=0;
     card.addEventListener('pointermove',event=>{
-      if(reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
+      if(event.pointerType === 'touch' || reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
       clientX=event.clientX; clientY=event.clientY;
       if(!frame) frame=requestAnimationFrame(()=>{
         const bounds=card.getBoundingClientRect();
@@ -120,8 +136,8 @@ if(lamp) {
   });
   const brightness=lamp.querySelector<HTMLInputElement>('#brightness')!;
   brightness.addEventListener('input',()=>{
-    lamp.style.setProperty('--lamp-brightness',String(.65+Number(brightness.value)/200));
-    lamp.style.setProperty('--lamp-glow',String(Number(brightness.value)/130));
+    lamp.style.setProperty('--lamp-brightness',String(.76+Number(brightness.value)*.0034));
+    lamp.style.setProperty('--lamp-glow',String(Number(brightness.value)*.004));
     lamp.querySelector('#brightness-value')!.textContent=`${brightness.value}%`;
   });
 }
@@ -130,16 +146,22 @@ const booking=document.querySelector<HTMLElement>('[data-booking]');
 const styleLab=document.querySelector<HTMLElement>('[data-style-lab]');
 styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-palette"]').forEach(input=>{
   input.disabled=false;
-  input.addEventListener('change',()=>{
-    styleLab.dataset.palette=input.value;
-    const index=styleLab.querySelector<HTMLElement>('[data-lab-index]');
-    if(index) index.textContent=`${String(['wine','forest','stone'].indexOf(input.value)+1).padStart(2,'0')} / 03`;
-  });
+  input.addEventListener('change',()=>{styleLab.dataset.palette=input.value;});
 });
 styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-tone"]').forEach(input=>{
   input.disabled=false;
   input.addEventListener('change',()=>{styleLab.dataset.tone=input.value;});
 });
+if (styleLab && 'IntersectionObserver' in window) {
+  const loadSculpture = new IntersectionObserver(([entry]) => {
+    if (!entry?.isIntersecting) return;
+    loadSculpture.disconnect();
+    void import('./sculpture').then(({ initSculpture }) => initSculpture(styleLab, lightField)).catch(() => {
+      // The reference image remains visible if the 3D scene cannot load.
+    });
+  }, { rootMargin: '240px' });
+  loadSculpture.observe(styleLab);
+}
 if(booking) {
   const days = Array.from(booking.querySelectorAll<HTMLInputElement>('[name="booking-day"]'));
   const times = booking.querySelectorAll<HTMLInputElement>('[name="booking-time"]');
@@ -156,7 +178,13 @@ if(booking) {
           time.value = value;
           time.disabled = !value;
           const label = time.labels?.[0]?.querySelector('[data-time-label]');
-          if (label) label.textContent = value;
+          if (!label) return;
+          label.textContent = value;
+          if (reducedMotion.matches || lightField?.dataset.motionPaused === 'true' || !label.animate) return;
+          label.getAnimations().forEach(animation => animation.cancel());
+          label.animate([{ opacity: .3, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], {
+            duration: 360, delay: i * 45, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards',
+          });
         });
         status.textContent = `День: ${day.value.toLowerCase()}. Выберите время.`;
       });
@@ -174,8 +202,15 @@ const tasks=document.querySelector<HTMLElement>('[data-tasks]');
 tasks?.querySelectorAll<HTMLInputElement>('input').forEach(input=> {input.disabled=false;});
 tasks?.addEventListener('change',()=>{
   const count=tasks.querySelectorAll('input:checked').length;
-  tasks.querySelector<HTMLProgressElement>('progress')!.value=count;
-  tasks.querySelector('[data-progress-text]')!.textContent=`${count} из 3`;
+  const progress=tasks.querySelector<HTMLProgressElement>('progress');
+  if (!progress) return;
+  const percentage=Math.round(100*count/progress.max);
+  const description=`${count} из ${progress.max}`;
+  progress.value=count;
+  progress.setAttribute('aria-valuetext',description);
+  tasks.style.setProperty('--task-progress',`${percentage}%`);
+  tasks.querySelector('[data-progress-text]')!.textContent=description;
+  tasks.querySelector('[data-progress-percent]')!.textContent=`${percentage}%`;
 });
 
 if('IntersectionObserver' in window) {

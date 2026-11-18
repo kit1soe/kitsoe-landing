@@ -1,5 +1,11 @@
 # Tasks
 
+## Visual rebuild after owner review
+
+- [x] Verify clean theme crossfade, whole viewport ambient light and legible surfaces.
+- [x] Refine full-width editorial art and verify the live 3D scene and fallback.
+- [x] Inspect both themes and narrow/wide layouts, run regression and performance checks, and save the rebuilt version.
+
 ## Completed visual development
 
 - [x] Expand meaningful interactive demonstrations and visual depth across the whole page.
