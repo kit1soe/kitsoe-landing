@@ -146,13 +146,14 @@
   .service-tags { display: flex; flex-wrap: wrap; gap: var(--s8); margin-block-start: var(--s16); }
   .service-tags span { border: 1px solid var(--line); border-radius: 999px; padding: var(--s4) var(--s12); }
   .service-arrow { display: grid; place-items: center; inline-size: 40px; block-size: 40px; font-size: 1.5rem; line-height: 2rem; border: 1px solid var(--line); border-radius: 50%; }
-  .steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--s40); }
-  .step { padding-block-start: var(--s24); }
+  .steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--s24); }
+  .step { position:relative; isolation:isolate; overflow:clip; padding:var(--s32); border:1px solid var(--line); border-radius:16px; background:var(--surface); }
+  .step::before { content:attr(data-step); position:absolute; z-index:-1; inset-block-end:-.3em; inset-inline-end:var(--s16); font-size:6rem; line-height:1; font-weight:600; letter-spacing:-.08em; color:var(--accent); opacity:.07; pointer-events:none; }
   .step-index { display: flex; align-items: center; gap: var(--s16); color: var(--accent); margin-block-end: var(--s32); }
   .step-index::after { content: ''; block-size: 1px; background: var(--line); flex: 1; }
   .step h3 { margin-block-end: var(--s16); }
   .step > p { color: var(--muted); }
-  .process-note { display: flex; align-items: center; gap: var(--s16); margin-block-start: var(--s48); padding: var(--s24); background: var(--surface); border-radius: 12px; }
+  .process-note { display: flex; align-items: center; gap: var(--s16); margin-block-start: var(--s24); padding: var(--s24); background: var(--surface); border:1px solid var(--line); border-radius: 12px; }
   .process-note > span { color: var(--accent); font-size: 1.5rem; }
   .faq-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: var(--s80); }
   .faq-intro h2 { margin-block: var(--s24); }
@@ -338,6 +339,8 @@
     .service-arrow:hover { transform:rotate(45deg); }
     .service-row h3 { transition:transform .6s var(--ease); }
     .service-row:is(:hover,:focus-within) h3 { transform:translateX(8px); }
+    .step::before { transition:transform .8s var(--ease),opacity .8s var(--ease); }
+    .step:hover::before { transform:translateY(-8px); opacity:.14; }
     .task-checks label { transition:transform .5s var(--ease); }
     .task-checks label:has(input:checked) { transform:translateX(4px); }
     .lab-preview { transition:background-color .8s var(--ease); }

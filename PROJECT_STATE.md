@@ -9,6 +9,7 @@ Stage: ongoing visual and interaction development requested by owner. No deploym
 - Reopened task; removed completion marker; started native recovery watcher PID 8480. Confirm status after startup. Recovery is only for actual usage limit failures; do not end turn prematurely and expect it to restart a successful turn.
 - Current focus: improve visual system and meaningful live interactions beyond existing first-screen lighting. Inspect rendered result in browser and iterate across themes and mobile. Keep contact handoff, no fake proof, no deployment, accessible motion controls and user-supplied visual direction.
 - Existing source checkpoint: 700e5da. Search MGI memory on resume; preserve project state and save focused commits.
+- Progress 18 November: commits 90cc493, 19dbeba and 13d4fa8 pushed. Built interactive visual direction concept (three palettes) with a translucent CSS sculpture, responsive layouts and keyboard operation; added pointer lighting to service rows. Service links preselect a project only when field is empty, preserving a visitor's existing selection. Browser suite passed including new behavior and all 7 widths/both themes. Imagegen returned separate usage_limit_reached; do not retry before reset. Process section currently being refined, source changes uncommitted at this checkpoint. Resume watcher PID8480 active. More visual inspection and work remain; do not end prematurely.
 
 ## 18 November — current result
 
