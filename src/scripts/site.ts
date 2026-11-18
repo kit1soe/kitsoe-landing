@@ -48,12 +48,14 @@ atmosphereToggle?.addEventListener('click',()=>{
   atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
 });
 if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  let frame=0, x=0, y=0;
+  let frame=0, clientX=0, clientY=0;
   lightField.addEventListener('pointermove',event=>{
     if(reducedMotion.matches || lightField.dataset.motionPaused==='true') return;
-    const bounds=atmosphere.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
+    clientX=event.clientX; clientY=event.clientY;
     if(!frame) frame=requestAnimationFrame(()=>{
       if(!reducedMotion.matches && lightField.dataset.motionPaused!=='true') {
+        const bounds=atmosphere.getBoundingClientRect();
+        const x=clientX-bounds.left, y=clientY-bounds.top;
         cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`;
         lightField.style.setProperty('--hero-depth-x',`${(x/bounds.width-.5)*12}px`);
         lightField.style.setProperty('--hero-depth-y',`${(y/bounds.height-.5)*12}px`);
@@ -70,11 +72,13 @@ if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (po
 // Decorative reflections do not cover controls or carry information.
 if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.querySelectorAll<HTMLElement>('.demo-window, .service-row, .lab-preview').forEach(card=>{
-    let frame=0, x=0, y=0;
+    let frame=0, clientX=0, clientY=0;
     card.addEventListener('pointermove',event=>{
       if(reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
-      const bounds=card.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
+      clientX=event.clientX; clientY=event.clientY;
       if(!frame) frame=requestAnimationFrame(()=>{
+        const bounds=card.getBoundingClientRect();
+        const x=clientX-bounds.left, y=clientY-bounds.top;
         card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`);
         card.style.setProperty('--depth-x',`${(x/bounds.width-.5)*16}px`); card.style.setProperty('--depth-y',`${(y/bounds.height-.5)*16}px`);
         frame=0;
