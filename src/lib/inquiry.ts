@@ -1,4 +1,4 @@
-export const projectTypes = ['Лендинг', 'Сайт для бизнеса', 'Веб приложение', 'Доработка сайта', 'Пока не знаю'] as const;
+export const projectTypes = ['Лендинг', 'Сайт для бизнеса', 'Приложение', 'Доработка сайта', 'Пока не знаю'] as const;
 export const budgets = ['Пока не определён', 'До 50 000 ₽', '50 000 – 100 000 ₽', '100 000 – 200 000 ₽', 'От 200 000 ₽'] as const;
 export type Channel = 'telegram' | 'email';
 export interface Inquiry { name: string; contact: string; project: string; budget: string; comment: string; channel: Channel }

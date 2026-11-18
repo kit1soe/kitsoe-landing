@@ -176,6 +176,9 @@ try {
       await page.locator('#inquiry-project').selectOption('Доработка сайта');
       await page.getByRole('link', {name:'Обсудить проект: Сайты для бизнеса'}).click();
       assert.equal(await page.locator('#inquiry-project').inputValue(), 'Доработка сайта');
+      await page.locator('#inquiry-project').selectOption('');
+      await page.getByRole('link', {name:'Обсудить проект: Приложения'}).click();
+      assert.equal(await page.locator('#inquiry-project').inputValue(), 'Приложение');
     } finally { await context.close(); }
   });
   await run('normal motion reveals once; reduced motion exposes final text', async () => {
