@@ -61,7 +61,7 @@ if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (po
 
 // Decorative reflections do not cover controls or carry information.
 if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  document.querySelectorAll<HTMLElement>('.demo-window').forEach(card=>{
+  document.querySelectorAll<HTMLElement>('.demo-window, .service-row').forEach(card=>{
     let frame=0, x=0, y=0;
     card.addEventListener('pointermove',event=>{
       if(reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
@@ -106,7 +106,11 @@ const booking=document.querySelector<HTMLElement>('[data-booking]');
 const styleLab=document.querySelector<HTMLElement>('[data-style-lab]');
 styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-palette"]').forEach(input=>{
   input.disabled=false;
-  input.addEventListener('change',()=>{styleLab.dataset.palette=input.value;});
+  input.addEventListener('change',()=>{
+    styleLab.dataset.palette=input.value;
+    const index=styleLab.querySelector<HTMLElement>('[data-lab-index]');
+    if(index) index.textContent=`${String(['wine','forest','stone'].indexOf(input.value)+1).padStart(2,'0')} / 03`;
+  });
 });
 if(booking) {
   booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=> {button.disabled=false;});
