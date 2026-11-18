@@ -137,7 +137,9 @@ try {
       assert.match(await page.locator('[data-booking-result]').textContent(), /сегодня, 15:00/);
       await page.locator('[data-tasks] input').nth(1).check(); await page.locator('[data-tasks] input').nth(2).check();
       assert.equal(await page.locator('#demo-progress').getAttribute('value'), '3');
-      const summary = page.locator('.faq-list summary').first(); await summary.focus(); await page.keyboard.press('Enter');
+      const summary = page.locator('.faq-list summary').first();
+      assert.equal(await summary.locator('.faq-icon').getAttribute('aria-hidden'), 'true');
+      await summary.focus(); await page.keyboard.press('Enter');
       assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), '');
       await page.keyboard.press('Enter'); assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), null);
     } finally { await context.close(); }

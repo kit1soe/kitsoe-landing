@@ -293,8 +293,8 @@
   .faq-list details:last-child { border-block-end:1px solid var(--line); }
   .faq-list summary { cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:var(--s24); padding-block:var(--s24); font-size:1rem; line-height:1.5rem; font-weight:500; }
   .faq-list summary::-webkit-details-marker { display:none; }
-  .faq-list summary::after { content:'+'; color:var(--accent); font-size:1.5rem; font-weight:400; line-height:2rem; flex-shrink:0; }
-  .faq-list details[open] summary::after { transform:rotate(45deg); }
+  .faq-icon { color:var(--accent); font-size:1.5rem; font-weight:400; line-height:2rem; flex-shrink:0; }
+  .faq-list details[open] .faq-icon { transform:rotate(45deg); }
   .faq-list details p { color:var(--muted); padding-block-end:var(--s24); max-inline-size:560px; }
   .contact-form { display:grid; gap:var(--s24); }
   .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--s24); }
@@ -365,7 +365,7 @@
     [data-palette='stone'] .lab-orbit span:nth-child(2) { transform:scale(1.2) translateY(-8%); }
     .task-window progress::-webkit-progress-value { transition:width .5s var(--ease); }
     .choice-button[aria-pressed='true'] { animation:choice-in .35s var(--ease); }
-    .faq-list summary::after { transition:transform .45s var(--ease); }
+    .faq-icon { transition:transform .45s var(--ease); }
     .faq-list details { interpolate-size:allow-keywords; }
     @supports (interpolate-size:allow-keywords) and selector(details::details-content) {
       .faq-list details::details-content { block-size:0; overflow:clip; transition:block-size .5s var(--ease),content-visibility .5s allow-discrete; }
