@@ -105,7 +105,7 @@
   .lab-options > div { display:flex; flex-wrap:wrap; gap:var(--s8); margin-block-start:var(--s12); }
   .lab-options label { cursor:pointer; position:relative; }
   .lab-options input { position:absolute; inline-size:1px; block-size:1px; opacity:0; }
-  .lab-options label span { display:block; padding:var(--s12) var(--s16); border:1px solid var(--line); border-radius:999px; font-size:.875rem; line-height:1.25rem; }
+  .lab-options label span { display:flex; align-items:center; min-block-size:48px; padding:var(--s12) var(--s16); border:1px solid var(--line); border-radius:999px; font-size:.875rem; line-height:1.25rem; }
   .lab-options input:checked + span { color:var(--button-text); background:var(--button); border-color:var(--button); text-decoration:underline; text-underline-offset:4px; }
   .lab-options input:focus-visible + span { outline:2px solid var(--accent); outline-offset:4px; }
   .lab-options input:disabled + span { opacity:.65; cursor:not-allowed; }
@@ -498,6 +498,8 @@
   }
   @media (pointer: coarse) {
     .icon-button,.product-arrow { min-inline-size:48px; min-block-size:48px; }
+    .service-arrow { position:relative; }
+    .service-arrow::after { content:''; position:absolute; inset:-4px; }
     .swatch-row label { min-inline-size:40px; min-block-size:48px; }
     input[type='range'] { min-block-size:48px; }
     .light-switch { min-block-size:48px; }

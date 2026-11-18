@@ -142,9 +142,11 @@ if('IntersectionObserver' in window) {
   const reveals=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');reveals.unobserve(entry.target);}});
   },{threshold:.08});
-  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(element=>{
-    if(!reducedMotion.matches && element.getBoundingClientRect().top>innerHeight) {element.classList.add('reveal-ready');reveals.observe(element);}
-  });
+  if(!reducedMotion.matches) {
+    // Read all geometry before changing classes, avoiding repeated layout work.
+    const belowFold=[...document.querySelectorAll<HTMLElement>('[data-reveal]')].filter(element=>element.getBoundingClientRect().top>innerHeight);
+    belowFold.forEach(element=>{element.classList.add('reveal-ready');reveals.observe(element);});
+  }
   const tagline=document.querySelector<HTMLElement>('.word-reveal');
   if(tagline && !reducedMotion.matches) {
     const text=tagline.textContent?.trim() ?? '';

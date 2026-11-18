@@ -218,10 +218,14 @@ try {
         assert.ok([200, 404].includes(response.status()));
         assert.ok((await page.title()).includes('kitsoe'));
         assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, nofollow');
+        assert.equal(await page.locator('meta[property="og:image"]').getAttribute('content'), '/og-v2.jpg');
         const broken = await page.locator('a[href^="#"]').evaluateAll(links => links.map(link => link.getAttribute('href')).filter(href => !document.getElementById(href.slice(1))));
         assert.deepEqual(broken, []);
       }
       assert.match(await (await page.request.get(base + '/robots.txt')).text(), /Disallow: \//);
+      const socialImage=await page.request.get(base + '/og-v2.jpg');
+      assert.equal(socialImage.status(),200);
+      assert.match(socialImage.headers()['content-type'],/image\/jpeg/);
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
     } finally { await context.close(); }
   });
