@@ -259,6 +259,10 @@ try {
       assert.equal(await section.evaluate(el => el.classList.contains('is-visible')), true);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       assert.equal(await page.locator('.word-reveal span[aria-hidden]').first().evaluate(el => getComputedStyle(el).opacity), '1');
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.goto(`${base}/#faq`, { waitUntil: 'networkidle' });
+      await page.waitForFunction(() => document.querySelector('#faq').getBoundingClientRect().top < window.innerHeight);
+      assert.equal(await page.locator('.section-heading[data-reveal]').first().evaluate(el => !el.classList.contains('reveal-ready') || el.classList.contains('is-visible')), true, 'Content above a direct anchor must not be hidden');
     } finally { await context.close(); }
   });
   await run('no JavaScript and forced colors keep content and direct contact available', async () => {

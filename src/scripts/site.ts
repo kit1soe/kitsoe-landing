@@ -160,12 +160,19 @@ tasks?.addEventListener('change',()=>{
 
 if('IntersectionObserver' in window) {
   const reveals=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');reveals.unobserve(entry.target);}});
+    entries.forEach(entry=>{
+      if(entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        reveals.unobserve(entry.target);
+      } else if(!entry.target.classList.contains('reveal-ready')) {
+        // Use observer-provided geometry; never hide content already above the viewport.
+        if(entry.boundingClientRect.top > (entry.rootBounds?.bottom ?? innerHeight)) entry.target.classList.add('reveal-ready');
+        else reveals.unobserve(entry.target);
+      }
+    });
   },{threshold:.08});
   if(!reducedMotion.matches) {
-    // Read all geometry before changing classes, avoiding repeated layout work.
-    const belowFold=[...document.querySelectorAll<HTMLElement>('[data-reveal]')].filter(element=>element.getBoundingClientRect().top>innerHeight);
-    belowFold.forEach(element=>{element.classList.add('reveal-ready');reveals.observe(element);});
+    document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(element=>reveals.observe(element));
   }
   const tagline=document.querySelector<HTMLElement>('.word-reveal');
   if(tagline && !reducedMotion.matches) {
