@@ -132,6 +132,10 @@ styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-palette"]').forEac
     if(index) index.textContent=`${String(['wine','forest','stone'].indexOf(input.value)+1).padStart(2,'0')} / 03`;
   });
 });
+styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-tone"]').forEach(input=>{
+  input.disabled=false;
+  input.addEventListener('change',()=>{styleLab.dataset.tone=input.value;});
+});
 if(booking) {
   booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=> {button.disabled=false;});
   booking.querySelectorAll<HTMLButtonElement>('button').forEach(button=>button.addEventListener('click',()=>{

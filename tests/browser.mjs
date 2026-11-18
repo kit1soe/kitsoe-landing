@@ -142,8 +142,8 @@ try {
       await page.keyboard.press('Enter'); assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), null);
     } finally { await context.close(); }
   });
-  await run('style concept changes palette with keyboard', async () => {
-    const { page, context } = await newPage();
+  await run('style concept changes palette and tone independently with keyboard', async () => {
+    const { page, context } = await newPage({ reducedMotion: 'reduce' });
     try {
       const group = page.locator('[data-style-lab]');
       const forest = page.getByRole('radio', { name: 'Лес', exact: true });
@@ -152,6 +152,21 @@ try {
       assert.equal(await forest.isChecked(), true);
       await page.getByRole('radio', { name: 'Камень', exact: true }).check();
       assert.equal(await group.getAttribute('data-palette'), 'stone');
+      const originalTheme = await page.locator('html').getAttribute('data-theme');
+      const light = page.getByRole('radio', { name: 'Светлое', exact: true });
+      await light.focus(); await page.keyboard.press('Space');
+      assert.equal(await group.getAttribute('data-tone'), 'light');
+      assert.equal(await group.getAttribute('data-palette'), 'stone');
+      assert.equal(await page.locator('html').getAttribute('data-theme'), originalTheme);
+      for (const tone of ['Светлое', 'Тёмное']) {
+        await page.getByRole('radio', { name: tone, exact: true }).check();
+        for (const name of ['Бордо', 'Лес', 'Камень']) {
+          await group.getByRole('radio', { name, exact: true }).check();
+          const audit = await new AxeBuilder({ page }).include('[data-style-lab]').withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
+          assert.deepEqual(audit.violations, [], `${name}, ${tone}: concept must be accessible`);
+        }
+      }
+      assert.equal(await group.getAttribute('data-tone'), 'dark');
     } finally { await context.close(); }
   });
   await run('pointer depth stops when motion is paused', async () => {
