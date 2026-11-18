@@ -331,6 +331,7 @@
     .services::before,.contact::before { animation:ambient-drift 24s var(--ease) infinite alternate; }
     [data-light-field][data-motion-paused='true'] ~ .services::before,[data-light-field][data-motion-paused='true'] ~ .contact::before { animation-play-state:paused; }
     @keyframes ambient-drift { from { transform:translate(-6%, -3%) scale(.9); } to { transform:translate(9%, 7%) scale(1.12); } }
+    .lamp-image { translate:var(--hero-depth-x,0px) var(--hero-depth-y,0px); transition:filter .6s var(--ease),translate .6s var(--ease); }
     ::view-transition-old(root) { animation:theme-out .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-new(root) { animation:theme-in .65s var(--ease) both; mix-blend-mode:normal; }
     ::view-transition-group(root) { animation-duration:.65s; }

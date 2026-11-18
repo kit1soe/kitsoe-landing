@@ -44,7 +44,7 @@ const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere
 atmosphereToggle?.addEventListener('click',()=>{
   const paused=lightField?.dataset.motionPaused !== 'true';
   if(lightField) lightField.dataset.motionPaused=String(paused);
-  if(paused) atmosphere?.classList.remove('is-active');
+  if(paused) { atmosphere?.classList.remove('is-active'); lightField?.style.removeProperty('--hero-depth-x'); lightField?.style.removeProperty('--hero-depth-y'); }
   atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
 });
 if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (pointer: fine)').matches) {
@@ -52,11 +52,19 @@ if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (po
   lightField.addEventListener('pointermove',event=>{
     if(reducedMotion.matches || lightField.dataset.motionPaused==='true') return;
     const bounds=atmosphere.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
-    if(!frame) frame=requestAnimationFrame(()=>{cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`; frame=0;});
+    if(!frame) frame=requestAnimationFrame(()=>{
+      if(!reducedMotion.matches && lightField.dataset.motionPaused!=='true') {
+        cursorLight.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        lightField.style.setProperty('--hero-depth-x',`${(x/bounds.width-.5)*12}px`);
+        lightField.style.setProperty('--hero-depth-y',`${(y/bounds.height-.5)*12}px`);
+      }
+      frame=0;
+    });
     atmosphere.classList.add('is-active');
   });
-  lightField.addEventListener('pointerleave',()=>atmosphere.classList.remove('is-active'));
-  reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) atmosphere.classList.remove('is-active');});
+  const clearHeroEffect=()=>{cancelAnimationFrame(frame); frame=0; atmosphere.classList.remove('is-active'); lightField.style.removeProperty('--hero-depth-x'); lightField.style.removeProperty('--hero-depth-y');};
+  lightField.addEventListener('pointerleave',clearHeroEffect);
+  reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) clearHeroEffect();});
 }
 
 // Decorative reflections do not cover controls or carry information.

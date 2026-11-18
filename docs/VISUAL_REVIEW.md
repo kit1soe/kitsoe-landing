@@ -16,5 +16,6 @@
 - `color`: я сохраняю контраст и текстовые/геометрические признаки состояния. “Don't use color alone”.
 - `animate-to-intrinsic-sizes`: я анимирую нативный details через проверку поддержки, иначе он открывается сразу. “One end of the transition must be a fixed length or percentage”.
 - `component-specific-light-dark-theme`: я задаю демонстрационному приложению собственные фон, текст, accent-color и color-scheme. “Do not set `color-scheme` on elements without a background”.
+- `performance`: я считываю расположение секций до изменения классов появления, чтобы не чередовать измерения и изменения разметки. “Batch DOM reads, then batch DOM writes.”
 
 Первоначальные браузерные сценарии прошли на семи ширинах в обеих темах. Последующая визуальная доводка проверяется прямым просмотром. Исходные оценки Lighthouse не выдаются за повторную проверку новой палитры. Намеренный noindex снижает SEO-оценку локального стенда.

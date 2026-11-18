@@ -157,6 +157,19 @@ try {
   await run('pointer depth stops when motion is paused', async () => {
     const { page, context } = await newPage({reducedMotion:'no-preference'});
     try {
+      const hero=page.locator('[data-light-field]');
+      const heroBox=await hero.boundingBox();
+      await page.mouse.move(heroBox.x + heroBox.width*.75,heroBox.y + heroBox.height*.4);
+      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
+      await page.emulateMedia({reducedMotion:'reduce'});
+      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') === '');
+      assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationName),'none');
+      await page.emulateMedia({reducedMotion:'no-preference'});
+      await page.mouse.move(heroBox.x + heroBox.width*.7,heroBox.y + heroBox.height*.5);
+      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
+      await page.getByRole('button',{name:'Остановить движение'}).click();
+      assert.equal(await hero.evaluate(el=>el.style.getPropertyValue('--hero-depth-x')), '');
+      await page.getByRole('button',{name:'Включить движение'}).click();
       const preview=page.locator('.lab-preview');
       await preview.scrollIntoViewIfNeeded();
       const box=await preview.boundingBox();
