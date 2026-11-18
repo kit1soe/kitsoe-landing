@@ -1,10 +1,10 @@
 # Tasks
 
-## Active visual development
+## Completed visual development
 
-- [ ] Expand meaningful interactive demonstrations and visual depth across the whole page.
-- [ ] Inspect and refine actual appearance, pointer effects and motion in both themes at desktop, tablet and phone widths.
-- [ ] Verify accessibility, reduced motion, functionality, build and preserve source history.
+- [x] Expand meaningful interactive demonstrations and visual depth across the whole page.
+- [x] Inspect and refine actual appearance, pointer effects and motion in both themes at desktop, tablet and phone widths.
+- [x] Verify accessibility, reduced motion, functionality and build. Record 27 passing scenarios each in Edge, Firefox and Playwright WebKit on the production preview.
 
 - [x] Read full user brief and gather requirements.
 - [x] Install and read landing-page-design and modern-web-guidance.
@@ -13,7 +13,7 @@
 - [x] Add MGI-Mind stdio MCP entry to Codex configuration.
 - [x] Verify memory tools, save project decisions locally.
 - [x] Resolve GitHub CLI authorization; create public kitsoe-landing repository and initial commit/push.
-- [x] Add checkpoint/resume scripts and validate recovery behavior (native watcher; actual limit reset awaits occurrence).
+- [x] Add checkpoint/resume scripts and validate recovery behavior with the native watcher after real usage resets.
 - [x] Scaffold Astro, TypeScript and lint; meaningful checks pending below.
 - [x] Implement hero, theme system and interactive demonstrations.
 - [x] Implement services, process, tagline reveal and FAQ.

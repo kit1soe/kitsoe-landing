@@ -1,13 +1,20 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import { site } from '../src/config/site.ts';
 
 const base = process.env.TEST_URL || 'http://127.0.0.1:4321';
-const artifacts = '.local/browser';
+const engines = new Map([['chromium', chromium], ['firefox', firefox], ['webkit', webkit]]);
+const engineName = process.env.BROWSER_ENGINE || 'chromium';
+const engine = engines.get(engineName);
+if (!engine) throw new Error('BROWSER_ENGINE must be chromium, firefox or webkit');
+const artifacts = engineName === 'chromium' ? '.local/browser' : `.local/browser/${engineName}`;
 await mkdir(artifacts, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || 'msedge', headless: true });
+const channel = engineName === 'chromium' ? process.env.BROWSER_CHANNEL || 'msedge' : undefined;
+const browser = await engine.launch({ channel, headless: true });
+const browserVersion = browser.version();
+console.log(`Testing ${channel || engineName} ${browserVersion} at ${base}`);
 const results = [];
 const run = async (name, fn) => {
   try { await fn(); results.push({ name, passed: true }); console.log(`PASS ${name}`); }
@@ -219,6 +226,7 @@ try {
     const { page, context } = await newPage({reducedMotion:'no-preference'});
     try {
       const hero=page.locator('[data-light-field]');
+      const motionPreference = await page.evaluateHandle(() => window.matchMedia('(prefers-reduced-motion: reduce)'));
       const heroBox=await hero.boundingBox();
       await page.mouse.move(heroBox.x + heroBox.width*.75,heroBox.y + heroBox.height*.4);
       await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
@@ -226,6 +234,7 @@ try {
       await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') === '');
       assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationName),'none');
       await page.emulateMedia({reducedMotion:'no-preference'});
+      await page.waitForFunction(preference => !preference.matches, motionPreference);
       await page.mouse.move(heroBox.x + heroBox.width*.7,heroBox.y + heroBox.height*.5);
       await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
       await page.getByRole('button',{name:'Остановить движение'}).click();
@@ -309,6 +318,6 @@ try {
   });
 } finally {
   await browser.close();
-  await writeFile(`${artifacts}/results.json`, JSON.stringify({ base, testedAt: new Date().toISOString(), results }, null, 2));
+  await writeFile(`${artifacts}/results.json`, JSON.stringify({ base, engineName, channel, browserVersion, testedAt: new Date().toISOString(), results }, null, 2));
 }
 if (results.some(result => !result.passed)) process.exitCode = 1;

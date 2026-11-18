@@ -1,9 +1,18 @@
 # Project state
 
 Updated: 2026-11-18 (Asia/Yekaterinburg).
-Stage: ongoing visual and interaction development requested by owner. No deployment.
+Stage: complete for the approved local scope. Source on public GitHub, no website deployment.
 
-## Active work — renewed request
+## Current handoff — 18 November 19:40 Yekaterinburg
+
+- Local development site is open at http://127.0.0.1:4321/. Production build preview at http://127.0.0.1:4322/. Public source: https://github.com/kit1soe/kitsoe-landing.
+- The finished visual iteration includes animated light/dark themes, pointer lighting, a lamp card, six independent concept palettes/tones, a booking concept with distinct schedules, and a project checklist. The form prepares a local draft for Telegram or email. Contact settings live in `src/config/site.ts`.
+- First screen tightened for small screens and explicitly names small businesses. Rechecked first screen at 390 and 1920, both themes on wide screen, mobile menu to form, and the booking demo at 360/390/1024/1440. Reviewed production screenshots from Firefox and WebKit. Final screenshots: `.local/browser/final-visuals/kitsoe-desktop.jpg` and `kitsoe-mobile.jpg`.
+- Final production preview browser scenarios: 27/27 in Edge 157.0.4341.60, Firefox 159.0 and Playwright WebKit 27.2 each, covering seven widths in both themes. The transient WebKit failure was a test race: the test now waits for its existing media query to update before moving the pointer. Astro check, lint, build and 15 unit tests passed. No messages sent.
+- Synthetic mobile Lighthouse on the final production preview: performance, accessibility and best practices 100, SEO 66 with intentional noindex, LCP 1.0 s, TBT 30 ms, CLS 0. Report `.local/lighthouse-20261118-final.json`. Desktop browser emulation only for these checks. Physical devices, real usage metrics and screen-reader speech have not been verified.
+- MGI-Mind library `kitsoe-landing` holds decisions and checkpoints. Understand Anything graph is a local baseline from the earlier architecture pass and has no runtime role. Native watcher successfully resumed after verified usage resets on 17 and 18 November. Completion marker is local and tells the watcher to exit.
+
+## Historical checkpoints — renewed visual iteration
 
 - 18 November 19:32 Yekaterinburg: resumed after user changed model. Each day in the booking concept now has a distinct schedule. Changing the day clears the selected time, native radio groups work with arrows, and the result is announced through a status region. Removed decorative arrows that looked clickable. Visually inspected dark at 360/1024 and light at 390/1440, including focus and day/time changes. Astro check, lint, build and complete Edge suite against production preview passed. Latest prior commit 9cc150f is pushed and saved in MGI. Next: stage/scan/commit booking and run the suite on Firefox and WebKit, whose local Playwright builds are installed under ignored .local. No real booking, deployment or completion marker.
 

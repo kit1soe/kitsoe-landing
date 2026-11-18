@@ -43,7 +43,18 @@ npm run build
 npm run test:browser
 ```
 
-Браузерные сценарии используют установленный Microsoft Edge; канал меняется через `BROWSER_CHANNEL`, адрес через `TEST_URL`. Артефакты: `.local/browser/` (не в Git).
+По умолчанию браузерные сценарии запускаются в Microsoft Edge. Для другого браузера Chromium задайте `BROWSER_CHANNEL`, для Firefox или WebKit задайте `BROWSER_ENGINE=firefox` или `BROWSER_ENGINE=webkit`. Адрес стенда задаётся через `TEST_URL`.
+
+```powershell
+$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) '.local/pw-browsers'
+npx playwright install firefox webkit
+$env:BROWSER_ENGINE = 'firefox'
+npm run test:browser
+$env:BROWSER_ENGINE = 'webkit'
+npm run test:browser
+```
+
+Отчёты и снимки сохраняются в `.local/browser/`, для Firefox и WebKit в отдельных подкаталогах.
 
 Отдельно осматривать композицию, типографику, переходы, раскрытый FAQ и форму на ширинах 360/390/430/768/1024/1440/1920 px в обеих темах. Автоматические проверки не оценивают художественное качество.
 

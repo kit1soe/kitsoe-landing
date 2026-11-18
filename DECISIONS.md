@@ -26,3 +26,8 @@
 - Choose burgundy as the main accent, paired with ivory, charcoal and the warm lamp. Preserve restrained typography and readable contrast in both themes.
 - Visual testing means looking at the rendered website: composition, spacing, typography, transitions and interaction on desktop and mobile. Automated checks support this inspection but do not replace it.
 - Public GitHub repository exists. Keep using the GitHub noreply commit address; do not publish the website.
+
+## 2026-11-18 — Interaction and verification
+
+- Booking uses local sample schedules. Changing day updates times and clears the previous selection. Native radio groups provide keyboard operation and a visible result announces the change.
+- Keep Edge as the default verification browser. Firefox and Playwright WebKit provide additional engine coverage on Windows, with separate local reports. Mobile viewport checks do not stand in for physical iOS or Android testing.
