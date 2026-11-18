@@ -38,7 +38,9 @@ try {
           assert.equal(await page.locator('h1').count(), 1);
           const clippedButtons = await page.locator('button:visible, a.button:visible').evaluateAll(buttons => buttons.filter(button => button.scrollWidth > button.clientWidth + 1).map(button => button.textContent));
           assert.deepEqual(clippedButtons, [], 'Button labels must fit their controls');
-          assert.equal(await page.locator('.lamp-image').evaluate(image => image.complete && image.naturalWidth > 0), true);
+          await page.locator('.lamp-image').scrollIntoViewIfNeeded();
+          await page.waitForFunction(() => { const lamp = document.querySelector('.lamp-image'); return lamp.complete && lamp.naturalWidth > 0; });
+          await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
           if (width === 390) {
             const cta = await page.locator('.hero-action .button').boundingBox();
             assert.ok(cta.y + cta.height < 844, 'Primary action must fit first mobile screen');
@@ -186,129 +188,69 @@ try {
       await page.keyboard.press('Enter'); assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), null);
     } finally { await context.close(); }
   });
-  await run('style concept changes palette and tone independently with keyboard', async () => {
-    const { page, context } = await newPage({ reducedMotion: 'reduce' });
-    try {
-      const group = page.locator('[data-style-lab]');
-      const forest = page.getByRole('radio', { name: 'Лес', exact: true });
-      await forest.focus(); await page.keyboard.press('Space');
-      assert.equal(await group.getAttribute('data-palette'), 'forest');
-      assert.equal(await forest.isChecked(), true);
-      await page.getByRole('radio', { name: 'Камень', exact: true }).check();
-      assert.equal(await group.getAttribute('data-palette'), 'stone');
-      const originalTheme = await page.locator('html').getAttribute('data-theme');
-      const light = page.getByRole('radio', { name: 'Светлое', exact: true });
-      await light.focus(); await page.keyboard.press('Space');
-      assert.equal(await group.getAttribute('data-tone'), 'light');
-      assert.equal(await group.getAttribute('data-palette'), 'stone');
-      assert.equal(await page.locator('html').getAttribute('data-theme'), originalTheme);
-      for (const tone of ['Светлое', 'Тёмное']) {
-        await page.getByRole('radio', { name: tone, exact: true }).check();
-        for (const name of ['Бордо', 'Лес', 'Камень']) {
-          await group.getByRole('radio', { name, exact: true }).check();
-          const audit = await new AxeBuilder({ page }).include('[data-style-lab]').withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
-          assert.deepEqual(audit.violations, [], `${name}, ${tone}: concept must be accessible`);
-        }
-      }
-      assert.equal(await group.getAttribute('data-tone'), 'dark');
-    } finally { await context.close(); }
-  });
-  await run('style concept fits artwork and controls at 320px', async () => {
-    const { page, context } = await newPage({ viewport: { width: 320, height: 800 }, reducedMotion: 'reduce' });
-    try {
-      const stage = page.locator('[data-sculpture-stage]');
-      await stage.scrollIntoViewIfNeeded();
-      const artwork = await stage.boundingBox();
-      const title = await page.locator('.lab-preview-bottom').boundingBox();
-      const settings = await page.locator('.style-lab-settings').boundingBox();
-      assert.ok(artwork && title && settings);
-      assert.ok(artwork.y + artwork.height <= title.y && title.y + title.height <= settings.y, 'art, caption and palette controls stay in reading order');
-      assert.equal(await page.locator('.lab-preview').evaluate(el => el.scrollWidth > el.clientWidth + 1), false);
-    } finally { await context.close(); }
-  });
-  await run('sculpture rotates and separates layers, with an image fallback', async () => {
+  await run('live preview reflows with keyboard and retains the lamp settings', async () => {
     const { page, context } = await newPage();
     try {
-      const stage = page.locator('[data-sculpture-stage]');
-      await stage.scrollIntoViewIfNeeded();
-      await page.waitForFunction(() => document.querySelector('[data-sculpture-stage]').dataset.rendering);
-      const slider = page.getByRole('slider', { name: 'Ракурс' });
-      const canvas = stage.locator('canvas');
-      const rendering = await stage.getAttribute('data-rendering');
-      console.log(`  Sculpture renderer: ${rendering}`);
-      if (rendering === 'live') {
-        const before = await canvas.screenshot();
-        await slider.press('End');
-        assert.equal(await slider.inputValue(), '180');
-        assert.equal(await slider.getAttribute('aria-valuetext'), '180°');
-        const turned = await canvas.screenshot();
-        assert.notDeepEqual(turned, before, 'Changing angle changes the rendered pixels');
-        const layers = page.getByRole('button', { name: 'Разнести слои' });
-        await layers.press('Space');
-        assert.equal(await layers.getAttribute('aria-pressed'), 'true');
-        assert.notDeepEqual(await canvas.screenshot(), turned, 'Separating rings changes the rendered pixels');
-      } else {
-        assert.equal(await canvas.isVisible(), false);
-        assert.equal(await stage.locator('img').isVisible(), true);
-        assert.equal(await slider.isVisible(), false);
-      }
+      const slider = page.getByRole('slider', { name: 'Ширина витрины' });
+      const stage = page.locator('.lamp-stage');
+      const details = page.locator('.lamp-details');
+      const wideStage = await stage.boundingBox();
+      const wideDetails = await details.boundingBox();
+      assert.ok(wideStage.x < wideDetails.x && wideStage.y + wideStage.height > wideDetails.y, 'Wide preview uses two columns');
+      await page.locator('#surface-graphite').check();
+      await slider.press('Home');
+      assert.equal(await slider.getAttribute('aria-valuetext'), '320 пикселей');
+      const compactStage = await stage.boundingBox();
+      const compactDetails = await details.boundingBox();
+      const compactFrame = await page.locator('[data-layout-viewport]').boundingBox();
+      assert.ok(compactStage.y + compactStage.height <= compactDetails.y, 'Narrow preview places details below the image');
+      assert.ok(compactStage.x + compactStage.width <= compactFrame.x + compactFrame.width + 1, 'Image fits the narrow preview');
+      assert.equal(await page.locator('[data-lamp]').getAttribute('data-surface'), 'graphite');
+      await slider.press('End');
+      assert.equal(await slider.inputValue(), '832');
+      assert.equal(await page.locator('[data-lamp]').getAttribute('data-surface'), 'graphite');
     } finally { await context.close(); }
-    const fallback = await browser.newContext({ reducedMotion: 'reduce' });
-    try {
-      const fallbackPage = await fallback.newPage();
-      await fallbackPage.addInitScript(() => {
-        const getContext = window.HTMLCanvasElement.prototype.getContext;
-        window.HTMLCanvasElement.prototype.getContext = function (type, ...options) {
-          return type === 'webgl' ? null : getContext.call(this, type, ...options);
-        };
-      });
-      await fallbackPage.goto(`${base}/#experience`);
-      const stage = fallbackPage.locator('[data-sculpture-stage]');
-      await stage.scrollIntoViewIfNeeded();
-      await stage.locator('img').waitFor();
-      await fallbackPage.waitForFunction(() => document.querySelector('[data-sculpture-stage]').dataset.rendering === 'image');
-      assert.equal(await fallbackPage.getByRole('slider', { name: 'Ракурс' }).count(), 0);
-    } finally { await fallback.close(); }
   });
-  await run('pointer depth stops when motion is paused', async () => {
-    const { page, context } = await newPage({reducedMotion:'no-preference'});
+  await run('storefront is compact and touch controls stay usable at 320px', async () => {
+    const { page, context } = await newPage({ viewport: { width: 320, height: 800 }, hasTouch: true });
     try {
-      const hero=page.locator('[data-light-field]');
-      const motionPreference = await page.evaluateHandle(() => window.matchMedia('(prefers-reduced-motion: reduce)'));
-      const heroBox=await hero.boundingBox();
-      await page.mouse.move(heroBox.x + heroBox.width*.75,heroBox.y + heroBox.height*.4);
-      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
-      await page.emulateMedia({reducedMotion:'reduce'});
-      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') === '');
-      assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationName),'none');
-      await page.emulateMedia({reducedMotion:'no-preference'});
-      await page.waitForFunction(preference => !preference.matches, motionPreference);
-      await page.mouse.move(heroBox.x + heroBox.width*.7,heroBox.y + heroBox.height*.5);
-      await page.waitForFunction(() => document.querySelector('[data-light-field]').style.getPropertyValue('--hero-depth-x') !== '');
-      await page.getByRole('button',{name:'Остановить движение'}).click();
-      assert.equal(await hero.evaluate(el=>el.style.getPropertyValue('--hero-depth-x')), '');
-      await page.getByRole('button',{name:'Включить движение'}).click();
+      const frame = page.locator('[data-layout-viewport]');
+      await frame.scrollIntoViewIfNeeded();
+      const artwork = await page.locator('.lamp-stage').boundingBox();
+      const details = await page.locator('.lamp-details').boundingBox();
+      assert.ok(artwork && details && artwork.y + artwork.height <= details.y);
+      assert.equal(await frame.evaluate(el => el.scrollWidth > el.clientWidth + 1), false);
+      assert.equal(await page.getByRole('slider', { name: 'Ширина витрины' }).isVisible(), false);
+      await page.getByRole('button', { name: 'Подсветка лампы' }).tap();
+      assert.equal(await frame.locator('[data-lamp]').getAttribute('data-lit'), 'false');
+    } finally { await context.close(); }
+  });
+  await run('background draws at device scale and pauses cleanly', async () => {
+    const { page, context } = await newPage({ deviceScaleFactor: 2, reducedMotion: 'no-preference' });
+    try {
+      const canvas = page.locator('[data-hero-flow]');
+      await page.waitForFunction(() => document.querySelector('[data-hero-flow]').width > 1000);
+      const density = await canvas.evaluate(el => el.width / el.clientWidth);
+      assert.ok(density > 1.5, 'Canvas uses a high-density backing buffer');
+      const atStart = await canvas.evaluate(el => el.toDataURL());
+      await page.waitForFunction(prior => document.querySelector('[data-hero-flow]').toDataURL() !== prior, atStart, { polling: 120 });
+      await page.getByRole('button', { name: 'Остановить движение' }).click();
+      const frame = await canvas.evaluate(el => el.toDataURL());
+      await page.waitForTimeout(180);
+      assert.equal(await canvas.evaluate(el => el.toDataURL()), frame, 'Paused background retains the same pixels');
       const field = page.locator('[data-page-light]');
-      const cursor = field.locator('.page-light-cursor');
-      const heroPosition = await cursor.evaluate(el => el.style.translate);
+      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), false);
+      await page.getByRole('button', { name: 'Включить движение' }).click();
+      await page.waitForFunction(prior => document.querySelector('[data-hero-flow]').toDataURL() !== prior, frame, { polling: 120 });
       await page.locator('#faq').scrollIntoViewIfNeeded();
       await page.mouse.move(23, 432);
-      await page.waitForFunction(previous => document.querySelector('.page-light-cursor').style.translate !== previous, heroPosition);
-      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), true, 'Outside any demo the page light still follows the pointer');
-      const preview=page.locator('.lab-preview');
-      await preview.scrollIntoViewIfNeeded();
-      const box=await preview.boundingBox();
-      await page.mouse.move(box.x + box.width*.8,box.y + box.height*.3);
-      await page.waitForFunction(() => document.querySelector('.lab-preview').style.getPropertyValue('--depth-x') !== '');
-      assert.ok(await preview.evaluate(el=>el.classList.contains('is-lit')));
-      await page.getByRole('button',{name:'Остановить движение'}).click();
-      assert.equal(await preview.evaluate(el=>el.style.getPropertyValue('--depth-x')), '');
-      assert.equal(await preview.evaluate(el=>el.classList.contains('is-lit')), false);
-      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), false);
-      assert.equal(await page.locator('.services').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
-      assert.equal(await page.locator('.contact').evaluate(el=>getComputedStyle(el,'::before').animationPlayState), 'paused');
+      await page.waitForFunction(() => document.querySelector('[data-page-light]').classList.contains('is-active'));
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.waitForFunction(() => !document.querySelector('[data-page-light]').classList.contains('is-active'));
+      assert.equal(await page.getByRole('button', { name: 'Остановить движение' }).isVisible(), false);
     } finally { await context.close(); }
   });
+
   await run('service link suggests a project type without overwriting a visitor choice', async () => {
     const { page, context } = await newPage();
     try {
@@ -326,6 +268,8 @@ try {
     const { page, context } = await newPage({ reducedMotion: 'no-preference' });
     try {
       const section = page.locator('[data-reveal]').first();
+      await page.waitForFunction(() => document.querySelector('[data-reveal]').classList.contains('reveal-ready'));
+      assert.equal(await section.evaluate(el => getComputedStyle(el).opacity), '1', 'Offscreen text retains contrast before entering');
       await section.scrollIntoViewIfNeeded();
       await page.waitForFunction(() => document.querySelector('[data-reveal]').classList.contains('is-visible'));
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));

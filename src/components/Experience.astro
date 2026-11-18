@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import glassStudy from '../assets/glass-study.png';
+import LayoutDemo from './LayoutDemo.astro';
 const tasks = ['Продумать структуру', 'Собрать интерфейс', 'Проверить результат'];
 const bookingDays = [
   { label: 'Сегодня', times: ['12:30', '15:00', '17:30'] },
@@ -12,46 +11,10 @@ const initialTime = initialDay.times[1];
 ---
 <section id="experience" class="section wrap" aria-labelledby="experience-title">
   <div class="section-heading" data-reveal>
-    <div><p class="eyebrow">01 / Возможности</p><h2 id="experience-title" class="heading-2">Не просто посмотреть.<br />Попробовать.</h2></div>
-    <p class="body-3">Хороший интерфейс чувствуется в действии. Измените оформление, выберите время или соберите небольшой план.</p>
+    <div><p class="eyebrow">01 / Возможности</p><h2 id="experience-title" class="heading-2">Интерфейсы в действии</h2></div>
+    <p class="body-3">Здесь можно настроить витрину, выбрать время записи и пройти этапы в небольшом приложении. Все примеры работают прямо на странице.</p>
   </div>
-  <article class="style-lab" data-reveal data-style-lab data-palette="wine" data-tone="dark">
-    <div class="style-lab-copy">
-      <p class="eyebrow">Интерактивный концепт</p>
-      <h3 class="heading-3">Одна идея.<br />Разное настроение.</h3>
-      <p class="body-3">Поменяйте палитру и сравните, как цвет, свет и материал меняют восприятие формы.</p>
-    </div>
-    <div class="lab-preview" role="group" aria-label="Пример страницы с выбранным оформлением">
-      <div class="lab-preview-top"><span class="lab-monogram">a.</span><span>АТЕЛЬЕ ФОРМЫ</span><span>КОНЦЕПТ</span></div>
-      <div class="lab-stage" data-sculpture-stage>
-        <div class="lab-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-        <div class="lab-sculpture" aria-hidden="true">
-          <Image src={glassStudy} alt="" widths={[320, 480, 640]} sizes="(max-width: 600px) 66vw, 340px" format="webp" loading="lazy" />
-          <canvas data-sculpture width="480" height="360"></canvas>
-        </div>
-      </div>
-      <div class="lab-preview-bottom">
-        <p class="caption-5" data-scene-hint>Исследование формы</p>
-        <p class="heading-4">Стекло и свет</p>
-      </div>
-      <div class="lab-scene-controls" data-scene-controls hidden>
-        <div><label class="caption-2" for="lab-angle">Ракурс</label><input id="lab-angle" type="range" min="-180" max="180" step="5" value="0" /></div>
-        <button class="caption-2" type="button" aria-pressed="false" data-scene-layers>Разнести слои</button>
-      </div>
-    </div>
-    <div class="style-lab-settings">
-      <fieldset class="lab-options"><legend class="caption-2">Выберите настроение</legend><div>
-        <label for="lab-wine"><input id="lab-wine" type="radio" name="lab-palette" value="wine" checked disabled /><span>Бордо</span></label>
-        <label for="lab-forest"><input id="lab-forest" type="radio" name="lab-palette" value="forest" disabled /><span>Лес</span></label>
-        <label for="lab-stone"><input id="lab-stone" type="radio" name="lab-palette" value="stone" disabled /><span>Камень</span></label>
-      </div></fieldset>
-      <fieldset class="lab-options lab-tone-options"><legend class="caption-2">Оформление концепта</legend><div>
-        <label for="lab-tone-dark"><input id="lab-tone-dark" type="radio" name="lab-tone" value="dark" checked disabled /><span>Тёмное</span></label>
-        <label for="lab-tone-light"><input id="lab-tone-light" type="radio" name="lab-tone" value="light" disabled /><span>Светлое</span></label>
-      </div></fieldset>
-      <p class="caption-5 lab-disclaimer">Демонстрация интерфейса.</p>
-    </div>
-  </article>
+  <LayoutDemo />
   <div class="demo-grid">
     <article class="demo-item" data-reveal>
       <div class="demo-window booking-window" data-booking>

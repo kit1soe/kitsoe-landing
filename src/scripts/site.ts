@@ -1,3 +1,5 @@
+import { initHeroFlow } from './hero-flow';
+
 const themeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')!;
 const systemTheme = matchMedia('(prefers-color-scheme: dark)');
 const themeButtons = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
@@ -11,7 +13,7 @@ function syncTheme() {
     button.setAttribute('aria-label',theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
     button.title = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
   });
-  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => {meta.content=theme==='dark'?'#181818':'#f5f3ef';});
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => {meta.content=theme==='dark'?'#1a171b':'#f7f3ef';});
 }
 themeButtons.forEach(button => button.addEventListener('click',() => {
   if(themeChanging) return;
@@ -38,6 +40,7 @@ addEventListener('storage',event => {
 syncTheme();
 
 const lightField=document.querySelector<HTMLElement>('[data-light-field]');
+if (lightField) initHeroFlow(lightField);
 const atmosphere=document.querySelector<HTMLElement>('[data-page-light]');
 const cursorLight=atmosphere?.querySelector<HTMLElement>('.page-light-cursor');
 const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere-toggle');
@@ -55,15 +58,11 @@ if (lightField && atmosphere && cursorLight) {
     cancelAnimationFrame(frame);
     frame = 0;
     atmosphere.classList.remove('is-active');
-    lightField.style.removeProperty('--hero-depth-x');
-    lightField.style.removeProperty('--hero-depth-y');
   };
   const render = () => {
     currentX += (targetX - currentX) * .18;
     currentY += (targetY - currentY) * .18;
     cursorLight.style.translate = `${currentX}px ${currentY}px`;
-    lightField.style.setProperty('--hero-depth-x', `${(currentX / window.innerWidth - .5) * 12}px`);
-    lightField.style.setProperty('--hero-depth-y', `${(currentY / window.innerHeight - .5) * 12}px`);
     const moving = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) > .5;
     frame = moving ? requestAnimationFrame(render) : 0;
   };
@@ -87,7 +86,7 @@ if (lightField && atmosphere && cursorLight) {
 
 // Decorative reflections do not cover controls or carry information.
 if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  document.querySelectorAll<HTMLElement>('.demo-window, .service-row, .lab-preview').forEach(card=>{
+  document.querySelectorAll<HTMLElement>('.demo-window, .service-row').forEach(card=>{
     let frame=0, clientX=0, clientY=0;
     card.addEventListener('pointermove',event=>{
       if(event.pointerType === 'touch' || reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
@@ -96,14 +95,12 @@ if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const bounds=card.getBoundingClientRect();
         const x=clientX-bounds.left, y=clientY-bounds.top;
         card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`);
-        card.style.setProperty('--depth-x',`${(x/bounds.width-.5)*16}px`); card.style.setProperty('--depth-y',`${(y/bounds.height-.5)*16}px`);
         frame=0;
       });
       card.classList.add('is-lit');
     });
     const clearEffect=()=>{
       cancelAnimationFrame(frame); frame=0; card.classList.remove('is-lit');
-      card.style.removeProperty('--depth-x'); card.style.removeProperty('--depth-y');
     };
     card.addEventListener('pointerleave',clearEffect);
     reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) clearEffect();});
@@ -142,26 +139,30 @@ if(lamp) {
   });
 }
 
-const booking=document.querySelector<HTMLElement>('[data-booking]');
-const styleLab=document.querySelector<HTMLElement>('[data-style-lab]');
-styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-palette"]').forEach(input=>{
-  input.disabled=false;
-  input.addEventListener('change',()=>{styleLab.dataset.palette=input.value;});
-});
-styleLab?.querySelectorAll<HTMLInputElement>('input[name="lab-tone"]').forEach(input=>{
-  input.disabled=false;
-  input.addEventListener('change',()=>{styleLab.dataset.tone=input.value;});
-});
-if (styleLab && 'IntersectionObserver' in window) {
-  const loadSculpture = new IntersectionObserver(([entry]) => {
-    if (!entry?.isIntersecting) return;
-    loadSculpture.disconnect();
-    void import('./sculpture').then(({ initSculpture }) => initSculpture(styleLab, lightField)).catch(() => {
-      // The reference image remains visible if the 3D scene cannot load.
-    });
-  }, { rootMargin: '240px' });
-  loadSculpture.observe(styleLab);
+const viewport = document.querySelector<HTMLElement>('[data-layout-viewport]');
+const viewportWidth = document.querySelector<HTMLInputElement>('#layout-width');
+const viewportStage = viewport?.parentElement;
+const viewportOutput = document.querySelector<HTMLOutputElement>('output[for="layout-width"]');
+if (viewport && viewportWidth && viewportStage && viewportOutput) {
+  const maximum = Number(viewportWidth.max);
+  let preferred = maximum;
+  const setWidth = () => {
+    const width = Math.min(preferred, Number(viewportWidth.max));
+    viewportWidth.value = String(width);
+    viewportWidth.setAttribute('aria-valuetext', `${width} пикселей`);
+    viewportOutput.value = `${width} px`;
+    viewport.style.setProperty('--preview-width', `${width}px`);
+  };
+  viewportWidth.addEventListener('input', () => { preferred = Number(viewportWidth.value); setWidth(); });
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      viewportWidth.max = String(Math.max(Number(viewportWidth.min), Math.min(maximum, Math.floor(entry.contentRect.width))));
+      setWidth();
+    }).observe(viewportStage);
+  }
 }
+const booking=document.querySelector<HTMLElement>('[data-booking]');
 if(booking) {
   const days = Array.from(booking.querySelectorAll<HTMLInputElement>('[name="booking-day"]'));
   const times = booking.querySelectorAll<HTMLInputElement>('[name="booking-time"]');

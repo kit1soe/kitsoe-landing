@@ -7,7 +7,7 @@ const services = [
 ---
 <section id="services" class="section services" aria-labelledby="services-title">
   <div class="wrap">
-    <div class="section-heading" data-reveal><div><p class="eyebrow">02 / Услуги</p><h2 id="services-title" class="heading-2">Под вашу задачу.<br />С вашим характером.</h2></div><p class="body-3">Вы рассказываете о цели.<br />Я превращаю её в продуманное решение.</p></div>
+    <div class="section-heading" data-reveal><div><p class="eyebrow">02 / Услуги</p><h2 id="services-title" class="heading-2">Что я могу сделать для вас</h2></div><p class="body-3">От страницы для запуска до сервиса, с которым работают каждый день.</p></div>
     <div>{services.map(service => <article class="service-row" data-reveal>
       <span class="service-number caption-4">{service.n}</span><h3 class="heading-4">{service.title}</h3>
       <div><p class="body-3">{service.text}</p><div class="service-tags caption-5">{service.tags.map(tag => <span>{tag}</span>)}</div></div>

@@ -1,5 +1,11 @@
 # Tasks
 
+## Art direction after owner feedback
+
+- [x] Audit rendered hierarchy, rhythm, palette and motion and review design references.
+- [x] Rebuild the hero, section hierarchy and working interface demonstration.
+- [x] Refine actual light/dark browser captures, verify width, motion, form and performance, and save source.
+
 ## Visual rebuild after owner review
 
 - [x] Verify clean theme crossfade, whole viewport ambient light and legible surfaces.

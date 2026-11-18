@@ -1,9 +1,17 @@
 # Project state
 
 Updated: 2026-11-18 (Asia/Yekaterinburg).
-Stage: visual rebuild verified on the local production preview. No website deployment.
+Stage: editorial art direction implemented and verified on the local preview. No website deployment.
 
-## Visual rebuild — 18 November, 20:16 Yekaterinburg
+## Art direction audit and rebuild — 18 November, 23:20 Yekaterinburg
+
+- Owner rejected the 20b1d95 composition as pixelated, flat and disconnected, requested deeper analysis of typography, spacing, color and motion. Reviewed older production preview hero, services, and approach directly. Found the image and product card competing, a hard burgundy chapter break, separate boxed steps, and equal typography between main headings and UI labels. Researched Taste Skill background/motion guidance, Emil Kowalski, Locomotive Structured, Linear’s design refresh and Fontsource. See current build before assuming final aesthetic approval.
+- Updated day/night neutral palette and Cormorant Garamond display with Manrope controls, typography-led hero, resolution-aware Canvas2D light ribbons, glow that responds to interaction, services on the shared background and process as one sequence. Replaced the abstract 3D sample with a container-responsive lamp interface and a width control that retains palette and brightness. Kept previous raster and 3D assets in Git history.
+- Compared the rendered hero in both themes at 390 and 1440 px, with further dark checks at 768 and 1920. Looked at the services and form on 1920, process on 768, and wide/compact store states on 1440. Fixed a compact image overflowing its frame and a focus ring touching the slider label. In the final pass, text remains legible during entry and the theme transition is shorter. Browser captures are under `.local/browser/editorial/`. See `docs/VISUAL_REVIEW.md` for the specific findings.
+- Build, Astro type check, lint and 15 Node tests passed. Edge 157.0.4341.60, Firefox 159.0 and Playwright WebKit 27.2 passed 27/27 each on the final production preview, including seven widths in both themes, accessibility, reflow, theme persistence, pause and form draft. Final synthetic mobile Lighthouse: 100 performance, accessibility and best practices, 66 SEO with deliberate noindex, 1.0 s LCP, 20 ms TBT, CLS 0.001, 158 KiB loaded. No physical devices or live message delivery tested.
+- Dev preview http://127.0.0.1:4321/ remains running. The watcher sent an actual same-chat resume at 23:05 Yekaterinburg after usage recovered. PID 15496 was verified active during the current iteration. The local completion marker is written after saving the verified source and memory checkpoint.
+
+## Previous visual rebuild — 18 November, 20:16 Yekaterinburg
 
 - The owner rejected the previous look: the theme switch flashed, pointer light stopped at container edges, and the demos felt like state toggles. Reviewed the short video provided in Downloads. Its strongest examples stage typography and controls inside a full-width image with a distinct atmosphere. The owner's file and sampled frames remain local and are not site assets.
 - Finished full-width day/night cast-glass art direction, independent viewport-wide pointer and ambient lighting, single-overlay theme crossfade, smoother lamp light and procedural WebGL ribbon with static fallback. In the demos, available appointment times animate in and the checklist displays a live progress ring. Contrast in the hero strengthened and the small-screen scene moved before the palette selectors.

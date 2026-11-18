@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import lamp from '../assets/lamp.png';
+---
+<article class="layout-demo" data-layout-demo aria-labelledby="layout-demo-title">
+  <div class="layout-demo-intro">
+    <div>
+      <h3 class="heading-4" id="layout-demo-title">Один интерфейс, два экрана</h3>
+      <p class="body-6 muted">Настройте свет и окружение. <span class="layout-width-hint js-only">Подвигайте ползунок: витрина перестроится и сохранит настройки.</span></p>
+    </div>
+    <div class="layout-width js-only">
+      <label for="layout-width" class="caption-2">Ширина витрины</label>
+      <input id="layout-width" type="range" min="320" max="832" value="832" aria-valuetext="832 пикселя" />
+      <output for="layout-width" class="caption-2">832 px</output>
+    </div>
+  </div>
+  <div class="layout-demo-stage">
+    <div class="layout-viewport" data-layout-viewport>
+      <div class="lamp-preview" data-lamp data-surface="wine" data-lit="true">
+        <div class="showcase-caption caption-2"><span class="layout-demo-brand">forma<span>.</span></span><span>Концепт витрины</span></div>
+        <div class="lamp-grid">
+          <div class="lamp-stage">
+            <span class="stage-ring" aria-hidden="true"></span>
+            <span class="lamp-glow" aria-hidden="true"></span>
+            <Image src={lamp} alt="Настольная лампа с рифлёным керамическим плафоном и бронзовым основанием" widths={[320, 480, 640]} sizes="(max-width: 600px) 65vw, 340px" format="webp" loading="lazy" class="lamp-image" />
+            <button type="button" class="light-switch js-only" aria-pressed="true" aria-label="Подсветка лампы"><span class="light-indicator" aria-hidden="true"></span><span>Подсветка</span></button>
+          </div>
+          <div class="lamp-details">
+            <p class="caption-5 muted">Настольный свет</p>
+            <h4 class="heading-4">Тёплая форма</h4>
+            <p class="body-6 muted">Рифлёная керамика, тёплый свет и бронзовое основание.</p>
+            <div class="product-controls js-only">
+              <fieldset class="surface-options">
+                <legend class="caption-2">Окружение</legend>
+                <div class="swatch-row">
+                  <label for="surface-wine" title="Бордо"><input id="surface-wine" type="radio" name="surface" value="wine" checked aria-label="Бордо" /><span class="swatch swatch-wine"></span></label>
+                  <label for="surface-chalk" title="Мел"><input id="surface-chalk" type="radio" name="surface" value="chalk" aria-label="Мел" /><span class="swatch swatch-chalk"></span></label>
+                  <label for="surface-graphite" title="Графит"><input id="surface-graphite" type="radio" name="surface" value="graphite" aria-label="Графит" /><span class="swatch swatch-graphite"></span></label>
+                </div>
+              </fieldset>
+              <div class="brightness-control"><label for="brightness" class="caption-2">Яркость <output for="brightness" id="brightness-value">70%</output></label><input id="brightness" name="brightness" type="range" min="10" max="100" value="70" step="1" /></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
