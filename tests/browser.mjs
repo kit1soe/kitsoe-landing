@@ -154,6 +154,20 @@ try {
       assert.equal(await group.getAttribute('data-palette'), 'stone');
     } finally { await context.close(); }
   });
+  await run('pointer depth stops when motion is paused', async () => {
+    const { page, context } = await newPage({reducedMotion:'no-preference'});
+    try {
+      const preview=page.locator('.lab-preview');
+      await preview.scrollIntoViewIfNeeded();
+      const box=await preview.boundingBox();
+      await page.mouse.move(box.x + box.width*.8,box.y + box.height*.3);
+      await page.waitForFunction(() => document.querySelector('.lab-preview').style.getPropertyValue('--depth-x') !== '');
+      assert.ok(await preview.evaluate(el=>el.classList.contains('is-lit')));
+      await page.getByRole('button',{name:'Остановить движение'}).click();
+      assert.equal(await preview.evaluate(el=>el.style.getPropertyValue('--depth-x')), '');
+      assert.equal(await preview.evaluate(el=>el.classList.contains('is-lit')), false);
+    } finally { await context.close(); }
+  });
   await run('service link suggests a project type without overwriting a visitor choice', async () => {
     const { page, context } = await newPage();
     try {

@@ -61,17 +61,25 @@ if(lightField && atmosphere && cursorLight && matchMedia('(hover: hover) and (po
 
 // Decorative reflections do not cover controls or carry information.
 if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  document.querySelectorAll<HTMLElement>('.demo-window, .service-row').forEach(card=>{
+  document.querySelectorAll<HTMLElement>('.demo-window, .service-row, .lab-preview').forEach(card=>{
     let frame=0, x=0, y=0;
     card.addEventListener('pointermove',event=>{
       if(reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
       const bounds=card.getBoundingClientRect(); x=event.clientX-bounds.left; y=event.clientY-bounds.top;
-      if(!frame) frame=requestAnimationFrame(()=>{card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`); frame=0;});
+      if(!frame) frame=requestAnimationFrame(()=>{
+        card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`);
+        card.style.setProperty('--depth-x',`${(x/bounds.width-.5)*16}px`); card.style.setProperty('--depth-y',`${(y/bounds.height-.5)*16}px`);
+        frame=0;
+      });
       card.classList.add('is-lit');
     });
-    card.addEventListener('pointerleave',()=>card.classList.remove('is-lit'));
-    reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) card.classList.remove('is-lit');});
-    atmosphereToggle?.addEventListener('click',()=>{if(lightField?.dataset.motionPaused==='true') card.classList.remove('is-lit');});
+    const clearEffect=()=>{
+      cancelAnimationFrame(frame); frame=0; card.classList.remove('is-lit');
+      card.style.removeProperty('--depth-x'); card.style.removeProperty('--depth-y');
+    };
+    card.addEventListener('pointerleave',clearEffect);
+    reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) clearEffect();});
+    atmosphereToggle?.addEventListener('click',()=>{if(lightField?.dataset.motionPaused==='true') clearEffect();});
   });
 }
 
