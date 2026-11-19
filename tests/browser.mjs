@@ -188,6 +188,41 @@ try {
       await page.keyboard.press('Enter'); assert.equal(await page.locator('.faq-list details').first().getAttribute('open'), null);
     } finally { await context.close(); }
   });
+  await run('theme wave starts at the toggle and recolors the selected lamp scene', async () => {
+    const { page, context } = await newPage({ viewport: { width: 768, height: 900 }, reducedMotion: 'no-preference' });
+    try {
+      const button = page.locator('.theme-toggle');
+      const stage = page.locator('.lamp-stage');
+      const shell = page.locator('[data-lamp]');
+      const cast = page.locator('.lamp-cast');
+      await page.locator('#surface-chalk').check();
+      await page.locator('#brightness').press('Home');
+      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.lamp-cast')).opacity) < .09);
+      await page.locator('#brightness').press('End');
+      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.lamp-cast')).opacity) > .75);
+      const lightStage = await stage.evaluate(el => getComputedStyle(el).backgroundColor);
+      const lightShell = await shell.evaluate(el => getComputedStyle(el).backgroundImage);
+      const bounds = await button.boundingBox();
+      const supportsWave = await page.evaluate(() => typeof document.startViewTransition === 'function');
+      await button.press('Enter');
+      await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark');
+      if (supportsWave) {
+        const point = await page.evaluate(() => document.documentElement.style.getPropertyValue('--theme-wave-origin').match(/[\d.]+/g)?.map(Number));
+        assert.ok(point && Math.abs(point[0] - bounds.x - bounds.width / 2) < 2 && Math.abs(point[1] - bounds.y - bounds.height / 2) < 2);
+        const mask = await page.evaluate(() => getComputedStyle(document.documentElement, '::view-transition-new(root)').maskImage);
+        assert.match(mask, /radial-gradient/);
+        await page.waitForFunction(() => !document.documentElement.style.getPropertyValue('--theme-wave-origin'));
+      }
+      assert.equal(await button.evaluate(el => document.activeElement === el), true);
+      assert.notEqual(await shell.evaluate(el => getComputedStyle(el).backgroundImage), lightShell);
+      assert.notEqual(await stage.evaluate(el => getComputedStyle(el).backgroundColor), lightStage);
+      assert.equal(await shell.getAttribute('data-surface'), 'chalk');
+      assert.equal(await page.locator('#brightness').inputValue(), '100');
+      await page.locator('.light-switch').click();
+      await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.lamp-cast')).opacity) === 0);
+      assert.equal(await cast.evaluate(el => getComputedStyle(el).opacity), '0');
+    } finally { await context.close(); }
+  });
   await run('live preview reflows with keyboard and retains the lamp settings', async () => {
     const { page, context } = await newPage();
     try {
@@ -240,6 +275,7 @@ try {
       assert.equal(await canvas.evaluate(el => el.toDataURL()), frame, 'Paused background retains the same pixels');
       const field = page.locator('[data-page-light]');
       assert.equal(await field.evaluate(el => el.classList.contains('is-active')), false);
+      assert.equal(await field.locator('.page-light-weave').evaluate(el => getComputedStyle(el).animationPlayState), 'paused');
       await page.getByRole('button', { name: 'Включить движение' }).click();
       await page.waitForFunction(prior => document.querySelector('[data-hero-flow]').toDataURL() !== prior, frame, { polling: 120 });
       await page.locator('#faq').scrollIntoViewIfNeeded();

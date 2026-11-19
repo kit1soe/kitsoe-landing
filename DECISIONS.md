@@ -43,3 +43,9 @@
 - Supersede the interior backgrounds and ornamental WebGL concept after the owner’s visual review. Use a typography-led opening, recurring light across sections and common spacing. Cormorant Garamond sets the display hierarchy and Manrope serves the controls. Use wine for primary actions and a small amount of jade for light and progress.
 - Draw atmospheric lines at device scale with a capped Canvas2D backing buffer. Keep the CSS light field as the background when canvas is unavailable. Pause drawing when the hero leaves the viewport, motion is disabled or the tab is hidden. Keep text fully visible in entrance states for contrast and first paint.
 - Demonstrate responsive code with the same live lamp interface in a resizable container. Use a native width range and retain palette and brightness when the layout changes.
+
+## 2026-11-19 — Lighting refinements
+
+- The owner approved the updated composition and requested richer interaction. Keep typography and layout. Render the pointer light once at viewport level and give demo windows translucent surfaces. Canvas strands deform locally; a static-safe drift layer carries the line motif to later sections.
+- Reveal the new theme from the actual toggle, with an opaque previous snapshot and a feathered radial mask. Keep site theme and lighting settings independent: changing theme recolors the selected scene without resetting the selection or brightness.
+- Set lamp power once and use it for the object, wall spill and floor reflection. Keep texture and edges quiet so the primary actions stay legible.

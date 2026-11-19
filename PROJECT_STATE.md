@@ -1,7 +1,15 @@
 # Project state
 
-Updated: 2026-11-18 (Asia/Yekaterinburg).
-Stage: editorial art direction implemented and verified on the local preview. No website deployment.
+Updated: 2026-11-19 (Asia/Yekaterinburg).
+Stage: requested light, theme and storefront refinements verified on local previews. No website deployment.
+
+## Shared lighting and theme wave — 19 November
+
+- Confirmed the clipping came from independent pointer lights confined to service rows and demo cards. Removed those lights in favor of a continuous viewport field, with two layered directional reflections and a faint animated line texture below the hero. Canvas strands now deflect and reflect locally near the pointer.
+- Theme transition now spreads from the actual toggle with a narrow feathered edge and no whole-page crossfade. Storefront shell and all three surroundings follow the site theme. Brightness affects the lamp rendering, shade spill and floor reflection. Primary buttons have finer material highlights and a deeper pressed state.
+- Visually checked the first screen, buttons, service boundaries and both themes of the storefront. Checked the wave on a narrow viewport, including keyboard activation. The second review softened the weave over the hero and corrected the lamp's floor falloff and brightness focus ring. Final screenshots in `.local/browser/light-study/`.
+- Build, Astro check, lint and 15 Node tests passed. Final production preview passed 28/28 in each of Edge 157.0.4341.60, Firefox 159.0 and Playwright WebKit 27.2. An earlier concurrent WebKit run had a form scroll timeout. An isolated rerun passed the form and all other cases. Synthetic mobile Lighthouse showed performance, accessibility and best practices 100, deliberate noindex SEO 66, LCP 1.0 s, TBT 70 ms, CLS 0.001, total 159 KiB. No messages sent or physical devices tested.
+- Native watcher was active during review for confirmed usage-limit recovery (PID 30840). Local dev preview remains at http://127.0.0.1:4321/. Save a local completion marker after the verified source and MGI-Mind checkpoint are recorded.
 
 ## Art direction audit and rebuild — 18 November, 23:20 Yekaterinburg
 

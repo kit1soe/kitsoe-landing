@@ -1,5 +1,11 @@
 # Tasks
 
+## Lighting and interaction refinements after owner review
+
+- [x] Unify cursor lighting, add local strand response and extend the light treatment below the hero.
+- [x] Implement the theme wave, themed lamp scene, distinct brightness effects and tactile controls.
+- [x] Compare the rendered wave, lamp, cursor and service edges in both themes and verify the final build.
+
 ## Art direction after owner feedback
 
 - [x] Audit rendered hierarchy, rhythm, palette and motion and review design references.

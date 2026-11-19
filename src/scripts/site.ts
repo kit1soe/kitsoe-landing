@@ -4,6 +4,7 @@ const themeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-sche
 const systemTheme = matchMedia('(prefers-color-scheme: dark)');
 const themeButtons = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const lightField=document.querySelector<HTMLElement>('[data-light-field]');
 let themeChanging = false;
 const resolvedTheme = () => themeMeta.content === 'light dark' ? (systemTheme.matches ? 'dark' : 'light') : themeMeta.content;
 function syncTheme() {
@@ -25,11 +26,25 @@ themeButtons.forEach(button => button.addEventListener('click',() => {
     try { if(preference) localStorage.setItem('kitsoe-theme',preference); else localStorage.removeItem('kitsoe-theme'); } catch { /* Persistence is optional. */ }
     syncTheme();
   };
-  // Only the palette changes. Keep focus on the same toggle throughout.
-  if(!document.startViewTransition || reducedMotion.matches) { applyTheme(); return; }
+  if (!document.startViewTransition || reducedMotion.matches || lightField?.dataset.motionPaused === 'true') {
+    applyTheme();
+    return;
+  }
+  // The icon is also the origin when the button is used from the keyboard.
+  const { x, y, width, height } = button.getBoundingClientRect();
+  const originX = x + width / 2;
+  const originY = y + height / 2;
+  const radius = Math.hypot(Math.max(originX, innerWidth - originX), Math.max(originY, innerHeight - originY));
+  const root = document.documentElement;
+  root.style.setProperty('--theme-wave-origin', `${originX}px ${originY}px`);
+  root.style.setProperty('--theme-wave-radius', `${Math.ceil(radius) + 16}px`);
   themeChanging = true;
   const transition = document.startViewTransition(applyTheme);
-  void transition.finished.catch(() => { /* A skipped visual transition still applies the theme. */ }).finally(() => { themeChanging = false; });
+  void transition.finished.catch(() => { /* A skipped visual transition still applies the theme. */ }).finally(() => {
+    root.style.removeProperty('--theme-wave-origin');
+    root.style.removeProperty('--theme-wave-radius');
+    themeChanging = false;
+  });
 }));
 systemTheme.addEventListener('change',syncTheme);
 addEventListener('storage',event => {
@@ -39,11 +54,15 @@ addEventListener('storage',event => {
 });
 syncTheme();
 
-const lightField=document.querySelector<HTMLElement>('[data-light-field]');
 if (lightField) initHeroFlow(lightField);
 const atmosphere=document.querySelector<HTMLElement>('[data-page-light]');
 const cursorLight=atmosphere?.querySelector<HTMLElement>('.page-light-cursor');
 const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere-toggle');
+if (lightField && atmosphere && 'IntersectionObserver' in window) {
+  new IntersectionObserver(([entry]) => {
+    if (entry) atmosphere.classList.toggle('is-below-hero', entry.intersectionRatio < .5);
+  }, { threshold: .5 }).observe(lightField);
+}
 atmosphereToggle?.addEventListener('click',()=>{
   const paused=lightField?.dataset.motionPaused !== 'true';
   if(lightField) lightField.dataset.motionPaused=String(paused);
@@ -54,6 +73,7 @@ if (lightField && atmosphere && cursorLight) {
   const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
   let frame = 0;
   let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+  let tilt = 0, targetTilt = 0;
   const clear = () => {
     cancelAnimationFrame(frame);
     frame = 0;
@@ -62,50 +82,34 @@ if (lightField && atmosphere && cursorLight) {
   const render = () => {
     currentX += (targetX - currentX) * .18;
     currentY += (targetY - currentY) * .18;
+    targetTilt *= .86;
+    tilt += (targetTilt - tilt) * .16;
     cursorLight.style.translate = `${currentX}px ${currentY}px`;
-    const moving = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) > .5;
+    cursorLight.style.rotate = `${tilt}deg`;
+    const moving = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) + Math.abs(tilt) > .5;
     frame = moving ? requestAnimationFrame(render) : 0;
   };
   document.addEventListener('pointermove', event => {
     if (event.pointerType === 'touch' || !finePointer.matches || reducedMotion.matches || atmosphere.dataset.motionPaused === 'true') return;
+    if (atmosphere.classList.contains('is-active')) {
+      targetTilt = Math.max(-19, Math.min(19, (event.clientY - targetY) * .7));
+    }
     targetX = event.clientX;
     targetY = event.clientY;
     if (!atmosphere.classList.contains('is-active')) {
       currentX = targetX;
       currentY = targetY;
+      tilt = targetTilt = 0;
       atmosphere.classList.add('is-active');
     }
     if (!frame) frame = requestAnimationFrame(render);
   }, { passive: true });
   document.documentElement.addEventListener('pointerleave', clear);
   window.addEventListener('blur', clear);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) clear(); });
   finePointer.addEventListener('change', () => { if (!finePointer.matches) clear(); });
   reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) clear(); });
   atmosphereToggle?.addEventListener('click', () => { if (atmosphere.dataset.motionPaused === 'true') clear(); });
-}
-
-// Decorative reflections do not cover controls or carry information.
-if(matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  document.querySelectorAll<HTMLElement>('.demo-window, .service-row').forEach(card=>{
-    let frame=0, clientX=0, clientY=0;
-    card.addEventListener('pointermove',event=>{
-      if(event.pointerType === 'touch' || reducedMotion.matches || lightField?.dataset.motionPaused==='true') return;
-      clientX=event.clientX; clientY=event.clientY;
-      if(!frame) frame=requestAnimationFrame(()=>{
-        const bounds=card.getBoundingClientRect();
-        const x=clientX-bounds.left, y=clientY-bounds.top;
-        card.style.setProperty('--light-x',`${x}px`); card.style.setProperty('--light-y',`${y}px`);
-        frame=0;
-      });
-      card.classList.add('is-lit');
-    });
-    const clearEffect=()=>{
-      cancelAnimationFrame(frame); frame=0; card.classList.remove('is-lit');
-    };
-    card.addEventListener('pointerleave',clearEffect);
-    reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches) clearEffect();});
-    atmosphereToggle?.addEventListener('click',()=>{if(lightField?.dataset.motionPaused==='true') clearEffect();});
-  });
 }
 
 const menu=document.querySelector<HTMLDialogElement>('#mobile-menu');
@@ -132,10 +136,10 @@ if(lamp) {
     light.setAttribute('aria-pressed',String(enabled));
   });
   const brightness=lamp.querySelector<HTMLInputElement>('#brightness')!;
+  const brightnessOutput=lamp.querySelector<HTMLOutputElement>('#brightness-value')!;
   brightness.addEventListener('input',()=>{
-    lamp.style.setProperty('--lamp-brightness',String(.76+Number(brightness.value)*.0034));
-    lamp.style.setProperty('--lamp-glow',String(Number(brightness.value)*.004));
-    lamp.querySelector('#brightness-value')!.textContent=`${brightness.value}%`;
+    lamp.style.setProperty('--lamp-power', String(brightness.valueAsNumber / 100));
+    brightnessOutput.value = `${brightness.value}%`;
   });
 }
 
