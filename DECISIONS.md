@@ -49,3 +49,9 @@
 - The owner approved the updated composition and requested richer interaction. Keep typography and layout. Render the pointer light once at viewport level and give demo windows translucent surfaces. Canvas strands deform locally; a static-safe drift layer carries the line motif to later sections.
 - Reveal the new theme from the actual toggle, with an opaque previous snapshot and a feathered radial mask. Keep site theme and lighting settings independent: changing theme recolors the selected scene without resetting the selection or brightness.
 - Set lamp power once and use it for the object, wall spill and floor reflection. Keep texture and edges quiet so the primary actions stay legible.
+
+## 2026-11-19 — Particle field
+
+- Replace the rotating cursor gradient and the deforming strand mesh after the owner reported flat reflections and visible stutter. Use a single viewport Canvas2D renderer, cached point and sparkle stamps and movement based on elapsed time. Limit the backing buffer and repaint budget. Pause stops the loop and reduced motion retains a still frame.
+- Use distinct concentrations of warm, rose and jade particles in the site's existing colors. Pointer speed changes the local force from attraction to a wider scatter. The official Astra and Sol launch supplied a reference for the motion of individual points.
+- Apply the existing storefront gradient and rim to the booking, task and inquiry panels. Keep shared surface properties in one rule.

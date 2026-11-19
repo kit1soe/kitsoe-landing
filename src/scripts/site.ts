@@ -1,4 +1,4 @@
-import { initHeroFlow } from './hero-flow';
+import { initPageParticles } from './page-particles';
 
 const themeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')!;
 const systemTheme = matchMedia('(prefers-color-scheme: dark)');
@@ -54,9 +54,8 @@ addEventListener('storage',event => {
 });
 syncTheme();
 
-if (lightField) initHeroFlow(lightField);
 const atmosphere=document.querySelector<HTMLElement>('[data-page-light]');
-const cursorLight=atmosphere?.querySelector<HTMLElement>('.page-light-cursor');
+if (atmosphere) initPageParticles(atmosphere);
 const atmosphereToggle=lightField?.querySelector<HTMLButtonElement>('.atmosphere-toggle');
 if (lightField && atmosphere && 'IntersectionObserver' in window) {
   new IntersectionObserver(([entry]) => {
@@ -69,48 +68,6 @@ atmosphereToggle?.addEventListener('click',()=>{
   if(atmosphere) atmosphere.dataset.motionPaused=String(paused);
   atmosphereToggle.textContent=paused?'Включить движение ▶':'Остановить движение Ⅱ';
 });
-if (lightField && atmosphere && cursorLight) {
-  const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
-  let frame = 0;
-  let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
-  let tilt = 0, targetTilt = 0;
-  const clear = () => {
-    cancelAnimationFrame(frame);
-    frame = 0;
-    atmosphere.classList.remove('is-active');
-  };
-  const render = () => {
-    currentX += (targetX - currentX) * .18;
-    currentY += (targetY - currentY) * .18;
-    targetTilt *= .86;
-    tilt += (targetTilt - tilt) * .16;
-    cursorLight.style.translate = `${currentX}px ${currentY}px`;
-    cursorLight.style.rotate = `${tilt}deg`;
-    const moving = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) + Math.abs(tilt) > .5;
-    frame = moving ? requestAnimationFrame(render) : 0;
-  };
-  document.addEventListener('pointermove', event => {
-    if (event.pointerType === 'touch' || !finePointer.matches || reducedMotion.matches || atmosphere.dataset.motionPaused === 'true') return;
-    if (atmosphere.classList.contains('is-active')) {
-      targetTilt = Math.max(-19, Math.min(19, (event.clientY - targetY) * .7));
-    }
-    targetX = event.clientX;
-    targetY = event.clientY;
-    if (!atmosphere.classList.contains('is-active')) {
-      currentX = targetX;
-      currentY = targetY;
-      tilt = targetTilt = 0;
-      atmosphere.classList.add('is-active');
-    }
-    if (!frame) frame = requestAnimationFrame(render);
-  }, { passive: true });
-  document.documentElement.addEventListener('pointerleave', clear);
-  window.addEventListener('blur', clear);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) clear(); });
-  finePointer.addEventListener('change', () => { if (!finePointer.matches) clear(); });
-  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) clear(); });
-  atmosphereToggle?.addEventListener('click', () => { if (atmosphere.dataset.motionPaused === 'true') clear(); });
-}
 
 const menu=document.querySelector<HTMLDialogElement>('#mobile-menu');
 const toggle=document.querySelector<HTMLButtonElement>('.menu-toggle');

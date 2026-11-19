@@ -260,29 +260,45 @@ try {
       assert.equal(await frame.locator('[data-lamp]').getAttribute('data-lit'), 'false');
     } finally { await context.close(); }
   });
-  await run('background draws at device scale and pauses cleanly', async () => {
+  await run('viewport particles respond below the hero and stop cleanly', async () => {
     const { page, context } = await newPage({ deviceScaleFactor: 2, reducedMotion: 'no-preference' });
     try {
-      const canvas = page.locator('[data-hero-flow]');
-      await page.waitForFunction(() => document.querySelector('[data-hero-flow]').width > 1000);
+      const canvas = page.locator('[data-page-particles]');
+      await page.waitForFunction(() => document.querySelector('[data-page-particles]').width > 1000);
       const density = await canvas.evaluate(el => el.width / el.clientWidth);
       assert.ok(density > 1.5, 'Canvas uses a high-density backing buffer');
       const atStart = await canvas.evaluate(el => el.toDataURL());
-      await page.waitForFunction(prior => document.querySelector('[data-hero-flow]').toDataURL() !== prior, atStart, { polling: 120 });
+      await page.waitForFunction(prior => document.querySelector('[data-page-particles]').toDataURL() !== prior, atStart, { polling: 120 });
       await page.getByRole('button', { name: 'Остановить движение' }).click();
       const frame = await canvas.evaluate(el => el.toDataURL());
       await page.waitForTimeout(180);
       assert.equal(await canvas.evaluate(el => el.toDataURL()), frame, 'Paused background retains the same pixels');
       const field = page.locator('[data-page-light]');
-      assert.equal(await field.evaluate(el => el.classList.contains('is-active')), false);
-      assert.equal(await field.locator('.page-light-weave').evaluate(el => getComputedStyle(el).animationPlayState), 'paused');
+      assert.equal(await field.locator('.page-light-field').first().evaluate(el => getComputedStyle(el).animationPlayState), 'paused');
       await page.getByRole('button', { name: 'Включить движение' }).click();
-      await page.waitForFunction(prior => document.querySelector('[data-hero-flow]').toDataURL() !== prior, frame, { polling: 120 });
-      await page.locator('#faq').scrollIntoViewIfNeeded();
-      await page.mouse.move(23, 432);
-      await page.waitForFunction(() => document.querySelector('[data-page-light]').classList.contains('is-active'));
+      await page.evaluate(() => document.querySelector('#services').scrollIntoView({ behavior: 'instant' }));
+      await page.waitForFunction(() => document.querySelector('[data-page-light]').classList.contains('is-below-hero'));
+      const samples = await canvas.evaluate(el => ({ top: el.getBoundingClientRect().top, height: el.getBoundingClientRect().height }));
+      assert.equal(samples.top, 0, 'Background stays in the viewport while scrolling');
+      const concentration = async () => canvas.evaluate(el => {
+        const ratio = el.width / el.clientWidth;
+        const context = el.getContext('2d');
+        const sample = context.getImageData(Math.round(860 * ratio), Math.round(620 * ratio), Math.round(270 * ratio), Math.round(235 * ratio));
+        let light = 0;
+        for (let index = 3; index < sample.data.length; index += 4) light += sample.data[index];
+        return light;
+      });
+      await page.mouse.move(120, 330);
+      const before = await concentration();
+      await page.mouse.move(995, samples.height * .735);
+      await page.waitForTimeout(450);
+      assert.ok(await concentration() > before * 1.2, 'Nearby particles visibly brighten and concentrate');
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.waitForFunction(() => !document.querySelector('[data-page-light]').classList.contains('is-active'));
+      await page.waitForFunction(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      const still = await canvas.evaluate(el => el.toDataURL());
+      await page.mouse.move(450, 720);
+      await page.waitForTimeout(180);
+      assert.equal(await canvas.evaluate(el => el.toDataURL()), still);
       assert.equal(await page.getByRole('button', { name: 'Остановить движение' }).isVisible(), false);
     } finally { await context.close(); }
   });

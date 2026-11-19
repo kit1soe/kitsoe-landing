@@ -1,7 +1,14 @@
 # Project state
 
 Updated: 2026-11-19 (Asia/Yekaterinburg).
-Stage: requested light, theme and storefront refinements verified on local previews. No website deployment.
+Stage: particle background and shared card surfaces verified on local previews. No website deployment.
+
+## Particles and shared surfaces — 19 November
+
+- The owner flagged the free-floating cursor light, irregular strands, perceptible lag and flat demo cards. Visually inspected the official GPT-6.2 Astra and Sol launch hero. Its point streams informed a custom asymmetrical composition for kitsoe. The style and artwork are original to this site.
+- Replaced cursor gradients and string meshes with one viewport Canvas2D particle field, with cached stamps and a 60 Hz paint budget. Nearby points gather when the cursor is steady, scatter during a sweep, and drift back gradually. Static base for reduced motion and background tabs. Unified card gradients and rims across the lamp, booking, task and contact panels. Existing wave still switches palettes.
+- Final 1440 × 1000 local headless Edge pointer measurement: median interval 18.1 ms vs 30.3 ms before. The 95th percentile was 18.5 ms vs 30.6 ms. The measurement is Canvas paint cadence, not display FPS. Synthetic mobile Lighthouse: 99 performance, 100 accessibility and best practices, intentional noindex 66 SEO, LCP 1.0 s, TBT 100 ms, CLS 0.001, 158 KiB. Visual verification covered the first screen, services and demo surfaces in both themes, including a 390 px emulated viewport. Captures and a 4.4-second motion recording are under `.local/browser/particles/`.
+- Build, Astro check, ESLint and 15 Node tests passed. Final browser tests in Edge 157.0.4341.60, Firefox 159.0 and Playwright WebKit 27.2 passed 28/28 each, including pixel response below the hero, pause, reduced motion, both themes at seven widths and local form handoff. Physical devices were not used. Native recovery watcher PID 28432 was active during this iteration. Dev preview remains at http://127.0.0.1:4321/.
 
 ## Shared lighting and theme wave — 19 November
 

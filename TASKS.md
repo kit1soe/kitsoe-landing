@@ -1,5 +1,11 @@
 # Tasks
 
+## Particle field and card finish
+
+- [x] Inspect the Astra/Sol visual reference and measure the existing interaction cadence.
+- [x] Replace the cursor light and strands and align the finishes of the demo and inquiry panels.
+- [x] Review the painted interaction and both themes, run final checks, record measurements and save source.
+
 ## Lighting and interaction refinements after owner review
 
 - [x] Unify cursor lighting, add local strand response and extend the light treatment below the hero.
